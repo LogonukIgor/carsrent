@@ -21,9 +21,9 @@ public class Order {
 
     private Long id;
 
-    private Long user_id;
+    private Integer userId;
 
-    private Long car_id;
+    private Integer carId;
 
     private Timestamp modificationDate;
 
