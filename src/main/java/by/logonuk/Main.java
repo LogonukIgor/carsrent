@@ -1,6 +1,8 @@
 package by.logonuk;
 
 import by.logonuk.domain.User;
+import by.logonuk.service.car.CarService;
+import by.logonuk.service.order.OrderService;
 import by.logonuk.service.user.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,6 +18,8 @@ public class Main {
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext("by.logonuk");
 
         UserService userService = annotationConfigApplicationContext.getBean(UserService.class);
+        CarService carService = annotationConfigApplicationContext.getBean(CarService.class);
+        OrderService orderService = annotationConfigApplicationContext.getBean(OrderService.class);
 
 //findAll
 //        List<User> all = userService.findAll();
@@ -47,6 +52,18 @@ public class Main {
 //
 //        User user2 = userService.update(user);
 //        System.out.println(user2);
+
+        Map<String, Integer> numOfUser = userService.numOfUsers();
+
+        System.out.println(numOfUser);
+
+        Map<String, Integer> numOfUser1 = carService.carsInStock();
+
+        System.out.println(numOfUser1);
+
+        Map<String, Integer> numOfUser2 = orderService.numOfOpenOrder();
+
+        System.out.println(numOfUser2);
 
     }
 }

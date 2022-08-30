@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -47,5 +48,10 @@ public class CarServiceImpl implements CarService{
     @Override
     public Long delete(Long id) {
         return carRepository.delete(id);
+    }
+
+    @Override
+    public Map<String, Integer> carsInStock() {
+        return carRepository.carsInStock();
     }
 }

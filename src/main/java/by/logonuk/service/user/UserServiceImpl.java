@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long delete(Long id) {
         return userRepository.delete(id);
+    }
+
+    @Override
+    public Map<String, Integer> numOfUsers() {
+        return userRepository.numOfUsers();
     }
 
 }

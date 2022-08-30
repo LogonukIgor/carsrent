@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -97,5 +99,13 @@ public class OrderRepository implements OrderRepositoryInteface{
     public Long delete(Long id) {
         jdbcTemplate.update("delete from carshop.orders where id = " + id);
         return id;
+    }
+
+    @Override
+    public Map<String, Integer> numOfOpenOrder() {
+        return jdbcTemplate.query("select cars_rent.get_orders_stats_number_of_open_order()", resultSet->{
+           resultSet.next();
+           return Collections.singletonMap("Количество открытых заказов", resultSet.getInt(1));
+        });
     }
 }

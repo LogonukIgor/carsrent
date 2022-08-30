@@ -21,4 +21,6 @@ public interface UserService {
     User update(User object);
 
     Long delete(Long id);
+
+    Map<String, Integer> numOfUsers();
 }

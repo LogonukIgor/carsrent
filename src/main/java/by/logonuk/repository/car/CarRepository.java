@@ -8,7 +8,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -104,5 +107,13 @@ public class CarRepository implements CarRepositoryInterface {
     public Long delete(Long id) {
         jdbcTemplate.update("delete from carshop.cars where id = " + id);
         return id;
+    }
+
+    @Override
+    public Map<String, Integer> carsInStock() {
+        return jdbcTemplate.query("select cars_rent.get_cars_stats_number_of_cars_in_stock()", resultSet->{
+            resultSet.next();
+            return Collections.singletonMap("Количество машин в наличии", resultSet.getInt(1));
+        });
     }
 }

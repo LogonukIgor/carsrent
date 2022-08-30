@@ -100,4 +100,12 @@ public class UserRepository implements UserRepositoryInterface {
         jdbcTemplate.update("delete from carshop.users where id = " + id);
         return id;
     }
+
+    @Override
+    public Map<String, Integer> numOfUsers() {
+        return jdbcTemplate.query("select cars_rent.get_users_stats_number_of_users(false)", resultSet -> {
+            resultSet.next();
+            return Collections.singletonMap("Количество пользователей", resultSet.getInt(1));
+        });
+    }
 }

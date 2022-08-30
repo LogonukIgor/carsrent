@@ -3,6 +3,7 @@ package by.logonuk.service.order;
 import by.logonuk.domain.Order;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface OrderService {
@@ -20,4 +21,6 @@ public interface OrderService {
     Order update(Order object);
 
     Long delete(Long id);
+
+    Map<String, Integer> numOfOpenOrder();
 }
