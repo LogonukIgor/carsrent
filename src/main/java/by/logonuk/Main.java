@@ -1,5 +1,6 @@
 package by.logonuk;
 
+import by.logonuk.configuration.ApplicationContextStarter;
 import by.logonuk.domain.User;
 import by.logonuk.service.car.CarService;
 import by.logonuk.service.order.OrderService;
@@ -57,13 +58,13 @@ public class Main {
 
         System.out.println(numOfUser);
 
-        Map<String, Integer> numOfUser1 = carService.carsInStock();
-
-        System.out.println(numOfUser1);
-
-        Map<String, Integer> numOfUser2 = orderService.numOfOpenOrder();
-
-        System.out.println(numOfUser2);
+//        Map<String, Integer> numOfUser1 = carService.carsInStock();
+//
+//        System.out.println(numOfUser1);
+//
+//        Map<String, Integer> numOfUser2 = orderService.numOfOpenOrder();
+//
+//        System.out.println(numOfUser2);
 
     }
 }

@@ -1,6 +1,6 @@
 package by.logonuk.configuration;
 
-import by.logonuk.util.DatabaseProperties;
+import by.logonuk.configuration.DatabaseProperties;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
