@@ -54,7 +54,7 @@ public class PersistenceProvidersConfiguration {
 
         // See: application.properties
         properties.put("hibernate.show_sql", "true");
-        properties.put("hibernate.default_schema", "carshop");
+        properties.put("hibernate.default_schema", "cars_rent");
         properties.put("current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
         return properties;
     }

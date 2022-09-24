@@ -125,11 +125,11 @@
             <artifactId>jaxb-runtime</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.flywaydb</groupId>-->
-<!--            <artifactId>flyway-core</artifactId>-->
-<!--            <version>9.3.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>9.3.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
