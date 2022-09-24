@@ -1,22 +1,17 @@
 package by.logonuk;
 
-import by.logonuk.configuration.ApplicationContextStarter;
-import by.logonuk.domain.User;
 import by.logonuk.service.car.CarService;
 import by.logonuk.service.order.OrderService;
 import by.logonuk.service.user.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-public class Main {
+public class Test {
     public static void main(String[] args) {
 
-        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext("by.logonuk");
+        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext();
 
         UserService userService = annotationConfigApplicationContext.getBean(UserService.class);
         CarService carService = annotationConfigApplicationContext.getBean(CarService.class);
