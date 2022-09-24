@@ -20,5 +20,3 @@ spring:
     url: "jdbc:postgresql://localhost:5432/carsrent"
 server:
   port: 8080
-
-#  baa82fe9-471b-45bb-98e3-1c882fcc4f4f
