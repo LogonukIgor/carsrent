@@ -6,7 +6,7 @@ as
 $$
 select count(id)
 from cars_rent.deal
-where is_completed = false;
+where is_deleted = false;
 $$;
 
 alter function get_deal_stats_number_of_open_deal() owner to postgres;
