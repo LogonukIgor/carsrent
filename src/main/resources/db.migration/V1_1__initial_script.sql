@@ -3,9 +3,45 @@ create sequence if not exists class_class_id_seq
 
 alter sequence class_class_id_seq owner to postgres;
 
+create sequence if not exists cars_car_id_seq;
+
+alter sequence cars_car_id_seq owner to postgres;
+
 create sequence if not exists l_users_cars_id_seq;
 
 alter sequence l_users_cars_id_seq owner to postgres;
+
+create table if not exists users
+(
+    id                bigserial
+        constraint users_pk
+            primary key,
+    user_name         varchar(20)  default 'User'::character varying,
+    surname           varchar(20),
+    is_deleted        boolean      default false                                 not null,
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6)                  not null,
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6)                  not null,
+    user_login        varchar(100) default 123                                   not null,
+    user_password     varchar(200) default 'default_password'::character varying not null
+);
+
+alter table users
+    owner to postgres;
+
+create unique index if not exists users_id_uindex
+    on users (id);
+
+create index if not exists users_is_deleted_index
+    on users (is_deleted);
+
+create index if not exists users_user_name_surname_index
+    on users (user_name, surname);
+
+create index if not exists users_password_index
+    on users (user_password);
+
+create unique index if not exists users_user_login_uindex
+    on users (user_login);
 
 create table if not exists cars_manufactury
 (
@@ -30,7 +66,7 @@ create unique index if not exists cars_manufactury_brand_id_uindex
 
 create table if not exists classes
 (
-    class_id          serial
+    class_id          integer      default nextval('cars_rent.class_class_id_seq'::regclass) not null
         constraint class_pk
             primary key,
     class             varchar(1)                                                             not null,
@@ -117,27 +153,25 @@ alter table transmissions
 
 create table if not exists cars
 (
-    car_id            bigserial
-        constraint cars_pk
-            primary key,
-    brand             varchar(20)                                   not null
+    id                bigint           default nextval('cars_rent.cars_car_id_seq'::regclass) not null,
+    brand             varchar(20)                                                             not null
         constraint cars_cars_manufactury_brand_fk
             references cars_manufactury (brand)
             on update cascade on delete cascade,
-    model             varchar(20)                                   not null
+    model             varchar(20)                                                             not null
         constraint cars_models_model_fk
             references models (model)
             on update cascade on delete cascade,
-    is_in_stock       boolean          default true                 not null,
-    is_deleted        boolean          default false                not null,
-    engine_volume     double precision default 2                    not null,
+    is_in_stock       boolean          default true                                           not null,
+    is_deleted        boolean          default false                                          not null,
+    engine_volume     double precision default 2                                              not null,
     year_of_issue     integer,
-    number_of_seats   integer          default 5                    not null,
-    air_conditioner   boolean          default true                 not null,
-    cost_per_day      double precision default 50                   not null,
-    creation_date     timestamp(6)     default CURRENT_TIMESTAMP(6) not null,
-    modification_date timestamp(6)     default CURRENT_TIMESTAMP(6) not null,
-    transmission_id   integer          default 1                    not null
+    number_of_seats   integer          default 5                                              not null,
+    air_conditioner   boolean          default true                                           not null,
+    cost_per_day      double precision default 50                                             not null,
+    creation_date     timestamp(6)     default CURRENT_TIMESTAMP(6)                           not null,
+    modification_date timestamp(6)     default CURRENT_TIMESTAMP(6)                           not null,
+    transmission_id   integer          default 1                                              not null
         constraint cars_transmissions_id_fk
             references transmissions
             on update cascade on delete cascade
@@ -146,8 +180,13 @@ create table if not exists cars
 alter table cars
     owner to postgres;
 
+alter sequence cars_car_id_seq owned by cars.id;
+
+create unique index if not exists cars_pk
+    on cars (id);
+
 create unique index if not exists cars_car_id_uindex
-    on cars (car_id);
+    on cars (id);
 
 create index if not exists cars_is_deleted_index
     on cars (is_deleted);
@@ -158,87 +197,13 @@ create index if not exists cars_is_in_stock_index
 create index if not exists cars_cost_per_day_index
     on cars (cost_per_day);
 
-create unique index if not exists transmissions_id_uindex
-    on transmissions (id);
-
-create unique index if not exists transmissions_transmission_uindex
-    on transmissions (type);
-
-create table if not exists roles
-(
-    id                bigserial
-        constraint roles_pk
-            primary key,
-    role_name         varchar(15)  default 'USER'::character varying not null,
-    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6)      not null,
-    is_deleted        boolean      default false                     not null
-);
-
-alter table roles
-    owner to postgres;
-
-create unique index if not exists roles_id_uindex
-    on roles (id);
-
-create table if not exists driving_licence
-(
-    id                bigserial
-        constraint driving_licence_pk
-            primary key,
-    date_of_issue     date                                      not null,
-    valid_until       date                                      not null,
-    category_b        boolean      default true                 not null,
-    serial_number     varchar(9)                                not null,
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6) not null,
-    modification_date timestamp(6) default CURRENT_TIMESTAMP(6) not null,
-    is_deleted        boolean      default false                not null
-);
-
-alter table driving_licence
-    owner to postgres;
-
-create table if not exists users
-(
-    id                bigserial
-        constraint users_pk
-            primary key,
-    user_name         varchar(20)  default 'User'::character varying,
-    surname           varchar(20),
-    is_deleted        boolean      default false                                 not null,
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6)                  not null,
-    modification_date timestamp(6) default CURRENT_TIMESTAMP(6)                  not null,
-    user_login        varchar(100) default 123                                   not null,
-    user_password     varchar(200) default 'default_password'::character varying not null,
-    licence_id        bigint                                                     not null
-        constraint users_driving_licence_id_fk
-            references driving_licence
-);
-
-alter table users
-    owner to postgres;
-
-create unique index if not exists users_id_uindex
-    on users (id);
-
-create unique index if not exists users_licence_id_uindex
-    on users (licence_id);
-
-create index if not exists users_is_deleted_index
-    on users (is_deleted);
-
-create index if not exists users_user_name_surname_index
-    on users (user_name, surname);
-
-create index if not exists users_password_index
-    on users (user_password);
-
-create unique index if not exists users_user_login_uindex
-    on users (user_login);
+alter table cars
+    add constraint cars_pk
+        primary key (id);
 
 create table if not exists deal
 (
-    id                bigserial
+    id                bigint       default nextval('cars_rent.l_users_cars_id_seq'::regclass) not null
         constraint l_users_cars_pk
             primary key,
     user_id           integer                                                                 not null
@@ -247,7 +212,7 @@ create table if not exists deal
             on update cascade on delete cascade,
     car_id            integer                                                                 not null
         constraint l_users_cars_cars_car_id_fk
-            references cars
+            references cars (id)
             on update cascade on delete cascade,
     modification_date timestamp(6) default CURRENT_TIMESTAMP(6)                               not null,
     receiving_date    timestamp(6) default CURRENT_TIMESTAMP(6)                               not null,
@@ -286,11 +251,58 @@ create index if not exists order_return_date_index
 create index if not exists order_price_index
     on deal (price);
 
+create unique index if not exists transmissions_id_uindex
+    on transmissions (id);
+
+create unique index if not exists transmissions_transmission_uindex
+    on transmissions (type);
+
+create table if not exists roles
+(
+    id                bigserial
+        constraint roles_pk
+            primary key,
+    role_name         varchar(15)  default 'USER'::character varying not null,
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6)      not null,
+    is_deleted        boolean      default false                     not null
+);
+
+alter table roles
+    owner to postgres;
+
+create unique index if not exists roles_id_uindex
+    on roles (id);
+
+create table if not exists driving_licence
+(
+    id                bigserial
+        constraint driving_licence_pk
+            primary key,
+    date_of_issue     date                                      not null,
+    valid_until       date                                      not null,
+    category_b        boolean      default true                 not null,
+    serial_number     varchar(9)                                not null,
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6) not null,
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6) not null,
+    is_deleted        boolean      default false                not null,
+    user_id           bigint                                    not null
+        constraint driving_licence_users_id_fk
+            references users
+            on update cascade on delete cascade
+);
+
+alter table driving_licence
+    owner to postgres;
+
 create unique index if not exists driving_licence_id_uindex
     on driving_licence (id);
 
 create unique index if not exists driving_licence_serial_number_uindex
     on driving_licence (serial_number);
+
+create unique index if not exists driving_licence_user_id_uindex
+    on driving_licence (user_id);
 
 create table if not exists l_role_user
 (
@@ -318,4 +330,3 @@ create unique index if not exists l_role_user_id_uindex
 
 create index if not exists l_role_user_role_id_user_id_index
     on l_role_user (role_id, user_id);
-

@@ -1,8 +1,4 @@
 package by.logonuk;
-
-import by.logonuk.service.car.CarService;
-import by.logonuk.service.order.OrderService;
-import by.logonuk.service.user.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
@@ -12,10 +8,6 @@ public class Test {
     public static void main(String[] args) {
 
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext();
-
-        UserService userService = annotationConfigApplicationContext.getBean(UserService.class);
-        CarService carService = annotationConfigApplicationContext.getBean(CarService.class);
-        OrderService orderService = annotationConfigApplicationContext.getBean(OrderService.class);
 
 //findAll
 //        List<User> all = userService.findAll();
@@ -48,10 +40,6 @@ public class Test {
 //
 //        User user2 = userService.update(user);
 //        System.out.println(user2);
-
-        Map<String, Integer> numOfUser = userService.numOfUsers();
-
-        System.out.println(numOfUser);
 
 //        Map<String, Integer> numOfUser1 = carService.carsInStock();
 //
