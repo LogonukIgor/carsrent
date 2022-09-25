@@ -1,6 +1,6 @@
 package by.logonuk.controller;
 
-import by.logonuk.repository.UserRepository;
+import by.logonuk.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +13,10 @@ import java.util.Collections;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/cars")
+public class CarController {
 
-    private final UserRepository repository;
+    public final CarRepository repository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable String id){

@@ -1,5 +1,8 @@
 package by.logonuk.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -25,6 +28,7 @@ public class Car {
     @Column(name = "is_in_stock")
     private Boolean isInStock;
 
+    @JsonIgnore
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
@@ -43,13 +47,27 @@ public class Car {
     @Column(name = "cost_per_day")
     private Double costPerDay;
 
+    @JsonIgnore
     @Column(name = "creation_date")
     private Timestamp creationDate;
 
+    @JsonIgnore
     @Column(name = "modification_date")
     private Timestamp modificationDate;
 
     @Column(name = "transmission_id")
-    private String transmissionId;
+    private Integer transmissionId;
+
+    @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
+    private Deal deal;
+
+    @OneToOne
+    @JoinTable(name = "deal",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnoreProperties("car")
+    private User user;
 
 }

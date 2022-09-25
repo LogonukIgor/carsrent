@@ -1,5 +1,7 @@
 package by.logonuk.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,15 +29,20 @@ public class DrivingLicence {
     @Column(name = "serial_number")
     private String serialNumber;
 
+    @JsonIgnore
     @Column(name = "creation_date")
     private Timestamp creationDate;
 
+    @JsonIgnore
     @Column(name = "modification_date")
     private Timestamp modificationDate;
 
+    @JsonIgnore
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
 }

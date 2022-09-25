@@ -1,7 +1,7 @@
 package by.logonuk.controller;
 
-import by.logonuk.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import by.logonuk.repository.DealRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/users")
-public class UserController {
+@AllArgsConstructor
+@RequestMapping("/deals")
+public class DealController {
 
-    private final UserRepository repository;
+    private final DealRepository repository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable String id){
