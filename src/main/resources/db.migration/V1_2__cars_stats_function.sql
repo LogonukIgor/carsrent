@@ -4,7 +4,7 @@ create or replace function get_cars_stats_number_of_cars_in_stock() returns inte
     language sql
 as
 $$
-select count(car_id)
+select count(id)
 from cars_rent.cars
 where is_deleted = false
   and is_in_stock = true;

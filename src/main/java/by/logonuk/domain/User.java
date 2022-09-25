@@ -1,44 +1,40 @@
 package by.logonuk.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Setter
-@Getter
-@EqualsAndHashCode
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_name")
     private String userName;
 
+    @Column
     private String surname;
 
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
 
+    @Column(name = "creation_date")
     private Timestamp creationDate;
 
+    @Column(name = "modification_date")
     private Timestamp modificationDate;
 
+    @Column(name = "user_login")
     private String login;
 
+    @Column(name = "user_password")
     private String password;
 
-    private Long licenceId;
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
 }

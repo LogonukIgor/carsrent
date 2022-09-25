@@ -1,52 +1,55 @@
 package by.logonuk.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Setter
-@Getter
-@EqualsAndHashCode
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Entity
+@Table(name = "cars")
 public class Car {
 
-    private Long carId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column
     private String brand;
 
+    @Column
     private String model;
 
+    @Column(name = "is_in_stock")
     private Boolean isInStock;
 
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
 
+    @Column(name = "engine_volume")
     private Double engineVolume;
 
+    @Column(name = "year_of_issue")
     private Integer yearOfIssue;
 
+    @Column(name = "number_of_seats")
     private Integer numberOfSeats;
 
+    @Column(name = "air_conditioner")
     private Boolean airConditioner;
 
+    @Column(name = "cost_per_day")
     private Double costPerDay;
 
-    private String transmission;
-
+    @Column(name = "creation_date")
     private Timestamp creationDate;
 
+    @Column(name = "modification_date")
     private Timestamp modificationDate;
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    @Column(name = "transmission_id")
+    private String transmissionId;
+
 }
