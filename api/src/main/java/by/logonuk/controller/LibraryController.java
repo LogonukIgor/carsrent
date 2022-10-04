@@ -1,6 +1,6 @@
 package by.logonuk.controller;
 
-import by.logonuk.repository.CarRepository;
+import by.logonuk.repository.LibraryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,19 +13,19 @@ import java.util.Collections;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cars")
-public class CarController {
+@RequestMapping("/library")
+public class LibraryController {
 
-    public final CarRepository repository;
+    private final LibraryRepository repository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable String id){
-        long userId = Long.parseLong(id);
+        long libraryId = Long.parseLong(id);
 
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(userId)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(libraryId)), HttpStatus.OK);
     }
     @GetMapping
-    public ResponseEntity<Object> findAllCars(){
+    public ResponseEntity<Object> findAllFields(){
         return new ResponseEntity<>(Collections.singletonMap("result", repository.findAll()), HttpStatus.OK);
     }
 }

@@ -1,12 +1,12 @@
 package by.logonuk.domain;
 
+import by.logonuk.domain.embed.TechnicalDatesAndInfo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -30,16 +30,13 @@ public class DrivingLicence {
     private String serialNumber;
 
     @JsonIgnore
-    @Column(name = "creation_date")
-    private Timestamp creationDate;
-
-    @JsonIgnore
-    @Column(name = "modification_date")
-    private Timestamp modificationDate;
-
-    @JsonIgnore
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "creationDate", column = @Column(name = "creation_date")),
+            @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
+            @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
+    })
+    private TechnicalDatesAndInfo technicalDatesAndInfo;
 
     @OneToOne
     @JoinColumn(name = "user_id")

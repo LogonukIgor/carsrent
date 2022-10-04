@@ -1,12 +1,13 @@
 package by.logonuk.domain;
 
+import by.logonuk.domain.embed.TechnicalDatesAndInfo;
+import by.logonuk.domain.enums.Transmissions;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -17,18 +18,8 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String brand;
-
-    @Column
-    private String model;
-
     @Column(name = "is_in_stock")
     private Boolean isInStock;
-
-    @JsonIgnore
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
 
     @Column(name = "engine_volume")
     private Double engineVolume;
@@ -45,16 +36,18 @@ public class Car {
     @Column(name = "cost_per_day")
     private Double costPerDay;
 
-    @JsonIgnore
-    @Column(name = "creation_date")
-    private Timestamp creationDate;
+    @Column(name = "transmission")
+    @Enumerated(EnumType.STRING)
+    private Transmissions transmission;
 
     @JsonIgnore
-    @Column(name = "modification_date")
-    private Timestamp modificationDate;
-
-    @Column(name = "transmission_id")
-    private Integer transmissionId;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "creationDate", column = @Column(name = "creation_date")),
+            @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
+            @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
+    })
+    private TechnicalDatesAndInfo technicalDatesAndInfo;
 
     @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
@@ -68,5 +61,10 @@ public class Car {
 //    )
 //    @JsonIgnoreProperties("car")
 //    private User user;
+
+    @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
+    @JsonIgnoreProperties("car")
+    private Library carInfo;
 
 }

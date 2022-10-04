@@ -25,7 +25,7 @@ public class DealController {
         return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(userId)), HttpStatus.OK);
     }
     @GetMapping
-    public ResponseEntity<Object> findAllUsers(){
+    public ResponseEntity<Object> findAllDeals(){
         return new ResponseEntity<>(Collections.singletonMap("result", repository.findAll()), HttpStatus.OK);
     }
 }

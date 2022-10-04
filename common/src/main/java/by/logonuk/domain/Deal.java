@@ -1,5 +1,6 @@
 package by.logonuk.domain;
 
+import by.logonuk.domain.embed.TechnicalDatesAndInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -16,26 +17,23 @@ public class Deal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
-    @Column(name = "modification_date")
-    private Timestamp modificationDate;
-
     @Column(name = "receiving_date")
     private Timestamp receivingDate;
 
     @Column(name = "return_date")
     private Timestamp returnDate;
 
-    @JsonIgnore
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
-
     @Column
     private Double price;
 
     @JsonIgnore
-    @Column(name = "creation_date")
-    private Timestamp creationDate;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "creationDate", column = @Column(name = "creation_date")),
+            @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
+            @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
+    })
+    private TechnicalDatesAndInfo technicalDatesAndInfo;
 
     @OneToOne
 //    @JsonBackReference

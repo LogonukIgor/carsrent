@@ -1,12 +1,13 @@
 package by.logonuk.domain;
 
+import by.logonuk.domain.embed.TechnicalDatesAndInfo;
+import by.logonuk.domain.embed.user.Credentials;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Set;
 
 @Data
@@ -26,23 +27,20 @@ public class User {
     private String surname;
 
     @JsonIgnore
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "creationDate", column = @Column(name = "creation_date")),
+            @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
+            @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
+    })
+    private TechnicalDatesAndInfo technicalDatesAndInfo;
 
-    @JsonIgnore
-    @Column(name = "creation_date")
-    private Timestamp creationDate;
-
-    @JsonIgnore
-    @Column(name = "modification_date")
-    private Timestamp modificationDate;
-
-    @Column(name = "user_login")
-    private String login;
-
-    @JsonIgnore
-    @Column(name = "user_password")
-    private String password;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "login", column = @Column(name = "user_login")),
+            @AttributeOverride(name = "password", column = @Column(name = "user_password"))
+    })
+    private Credentials credentials;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
