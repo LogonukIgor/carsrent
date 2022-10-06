@@ -1,4 +1,4 @@
-alter function get_deal_stats_number_of_open_deal() owner to postgres;
+drop function if exists get_deal_stats_number_of_open_deal();
 
 create or replace function get_deal_stats_number_of_open_deal() returns integer
     language sql

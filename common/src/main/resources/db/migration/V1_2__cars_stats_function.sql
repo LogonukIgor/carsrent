@@ -1,4 +1,4 @@
-drop function if exists get_cars_stats_number_of_cars_in_stock(boolean);
+drop function if exists get_cars_stats_number_of_cars_in_stock();
 
 create or replace function get_cars_stats_number_of_cars_in_stock() returns integer
     language sql
