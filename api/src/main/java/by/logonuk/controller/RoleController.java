@@ -1,6 +1,6 @@
 package by.logonuk.controller;
 
-import by.logonuk.repository.UserRepository;
+import by.logonuk.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,24 +13,18 @@ import java.util.Collections;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
-public class UserController {
-
-    private final UserRepository repository;
+@RequestMapping("/roles")
+public class RoleController {
+    private final RoleRepository repository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable String id){
-        long userId = Long.parseLong(id);
+        long roleId = Long.parseLong(id);
 
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(userId)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(roleId)), HttpStatus.OK);
     }
     @GetMapping
-    public ResponseEntity<Object> findAllUsers(){
+    public ResponseEntity<Object> findAllRoles(){
         return new ResponseEntity<>(Collections.singletonMap("result", repository.findAll()), HttpStatus.OK);
-    }
-
-    @GetMapping("/123")
-    public ResponseEntity<Object> findAllUsers123(){
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findByCredentialsLogin("343")), HttpStatus.OK);
     }
 }

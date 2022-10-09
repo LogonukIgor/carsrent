@@ -1,6 +1,7 @@
 package by.logonuk.domain;
 
 import by.logonuk.domain.embed.TechnicalDatesAndInfo;
+import by.logonuk.domain.enums.SystemRoles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -20,7 +21,8 @@ public class Role {
     private Long id;
 
     @Column(name = "role_name")
-    private String roleName;
+    @Enumerated(EnumType.STRING)
+    private SystemRoles roleName;
 
     @JsonIgnore
     @Embedded
@@ -31,6 +33,7 @@ public class Role {
     })
     private TechnicalDatesAndInfo technicalDatesAndInfo;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "l_role_user",
             joinColumns = @JoinColumn(name = "role_id"),

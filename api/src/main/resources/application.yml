@@ -19,3 +19,9 @@ spring:
     url: "jdbc:postgresql://localhost:5432/carsrent"
 server:
   port: 8080
+
+---
+
+jwt:
+  secret: sdfsdfwejfwiofjnoldivcow2371984
+  expiration: 60000
