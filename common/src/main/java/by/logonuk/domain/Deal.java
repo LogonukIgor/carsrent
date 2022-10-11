@@ -36,13 +36,11 @@ public class Deal {
     private TechnicalDatesAndInfo technicalDatesAndInfo;
 
     @OneToOne
-//    @JsonBackReference
     @JsonIgnoreProperties(value = {"deal","car"})
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne
-//    @JsonBackReference
     @JoinColumn(name = "car_id")
     @JsonIgnoreProperties(value = {"deal", "user"})
     private Car car;

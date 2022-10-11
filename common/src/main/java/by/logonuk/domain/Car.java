@@ -54,14 +54,6 @@ public class Car {
     @JsonIgnoreProperties(value = {"car", "user"})
     private Deal deal;
 
-//    @OneToOne
-//    @JoinTable(name = "deal",
-//            joinColumns = @JoinColumn(name = "car_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    @JsonIgnoreProperties("car")
-//    private User user;
-
     @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     @JsonIgnoreProperties("car")

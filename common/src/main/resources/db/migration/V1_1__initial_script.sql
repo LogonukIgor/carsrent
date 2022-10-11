@@ -27,7 +27,10 @@ create table if not exists users
     creation_date     timestamp(6) default CURRENT_TIMESTAMP(6) not null,
     modification_date timestamp(6) default CURRENT_TIMESTAMP(6) not null,
     user_login        varchar(100),
-    user_password     varchar(200)                              not null
+    user_password     varchar(200)                              not null,
+    user_mail         varchar(100)                              not null,
+    activation_code   varchar(50),
+    is_mail_activated bool         default false                not null
 );
 
 alter table users

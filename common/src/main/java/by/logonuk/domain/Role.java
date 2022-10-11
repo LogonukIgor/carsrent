@@ -2,8 +2,10 @@ package by.logonuk.domain;
 
 import by.logonuk.domain.embed.TechnicalDatesAndInfo;
 import by.logonuk.domain.enums.SystemRoles;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
