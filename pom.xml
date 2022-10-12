@@ -157,6 +157,14 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.github.houbb/hibernator-valid -->
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>hibernator-valid</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
