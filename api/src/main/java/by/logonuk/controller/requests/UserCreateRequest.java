@@ -2,8 +2,6 @@ package by.logonuk.controller.requests;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-
 @Data
 public class UserCreateRequest {
 

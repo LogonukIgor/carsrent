@@ -1,11 +1,13 @@
 package by.logonuk.controller;
 
+import by.logonuk.controller.mapping.CarMapping;
 import by.logonuk.controller.requests.CarCreateRequest;
-import by.logonuk.controller.requests.UserCreateRequest;
 import by.logonuk.domain.Car;
-import by.logonuk.domain.User;
+import by.logonuk.domain.CarManufactury;
+import by.logonuk.domain.Classification;
+import by.logonuk.domain.Model;
 import by.logonuk.domain.embed.TechnicalDatesAndInfo;
-import by.logonuk.domain.embed.user.Credentials;
+import by.logonuk.domain.enums.ClassificationLetter;
 import by.logonuk.domain.enums.Transmissions;
 import by.logonuk.repository.CarRepository;
 import by.logonuk.service.CarService;
@@ -44,24 +46,17 @@ public class CarController {
     public ResponseEntity<Object> createCar(@RequestBody CarCreateRequest carCreateRequest){
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
+        TechnicalDatesAndInfo carTechDateInf = new TechnicalDatesAndInfo(timestamp, timestamp, false);
 
-        Car car = new Car();
-        car.setEngineVolume(carCreateRequest.getEngineVolume());
-        car.setCostPerDay(carCreateRequest.getCostPerDay());
-        car.setNumberOfSeats(carCreateRequest.getNumberOfSeats());
-        car.setCostPerDay(carCreateRequest.getCostPerDay());
-        if(carCreateRequest.getTransmission().equals(Transmissions.AUTOMATIC.toString())){
-            car.setTransmission(Transmissions.AUTOMATIC);
-        }else if(carCreateRequest.getTransmission().equals(Transmissions.MANUAL.toString())){
-            car.setTransmission(Transmissions.MANUAL);
-        }else {
-            return new ResponseEntity<>(Collections.singletonMap("result", "Not valid transmission"), HttpStatus.BAD_REQUEST)
-        }
+        Car car = CarMapping.carMapping(carCreateRequest, carTechDateInf);
 
-        TechnicalDatesAndInfo techDateInf = new TechnicalDatesAndInfo(timestamp, timestamp, false);
+        CarManufactury carManufactury = CarMapping.carManufacturyMapping(carCreateRequest, carTechDateInf);
 
-        carService.createCar(car);
+        Classification classification = CarMapping.classificationMapping(carCreateRequest);
 
-        return new ResponseEntity<>(Collections.singletonMap("result", "Successful user addition. Check your mail"), HttpStatus.CREATED);
+        Model model = CarMapping.modelMapping(carCreateRequest, carTechDateInf);
+
+        carService.createCar(car, model, classification, carManufactury, carTechDateInf);
+        return new ResponseEntity<>(Collections.singletonMap("result", "Successful car addition"), HttpStatus.CREATED);
     }
 }

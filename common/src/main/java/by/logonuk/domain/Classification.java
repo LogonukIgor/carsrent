@@ -2,6 +2,7 @@ package by.logonuk.domain;
 
 import by.logonuk.domain.embed.TechnicalDatesAndInfo;
 import by.logonuk.domain.enums.ClassificationLetter;
+import by.logonuk.domain.enums.Transmissions;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

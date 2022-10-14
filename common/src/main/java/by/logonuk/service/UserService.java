@@ -32,7 +32,7 @@ public class UserService {
         user.getCredentials().getMail(),
         "Mail confirmation",
         String.format(
-            "Follow the link to confirm: \nhttp://localhost:8080/users/activation/%s",
+            "Follow the link to confirm: http://localhost:8080/users/activation/%s",
             user.getActivationCode()));
 
     userRepository.getRoleToUser(user.getId(), roleRepository.findByRoleName(SystemRoles.ROLE_ANONYMOUS).getId());

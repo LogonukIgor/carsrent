@@ -58,5 +58,4 @@ public class Car {
     @JsonManagedReference
     @JsonIgnoreProperties("car")
     private Library carInfo;
-
 }

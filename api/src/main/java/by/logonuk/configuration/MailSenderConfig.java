@@ -15,10 +15,14 @@ public class MailSenderConfig {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
+//        mailSender.setHost("smtp.yandex.ru");
+//        mailSender.setPort(465);
+//        mailSender.setUsername("logonukapi@yandex.by");
+//        mailSender.setPassword("yzhmtwzcnyczvntc");
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
         mailSender.setUsername("logonukapi@gmail.com");
-        mailSender.setPassword("ziqmivhxddfrugme");
+        mailSender.setPassword("lgkfcxxhyzgbcbbd");
         mailSender.setProtocol("smtp");
 
         Properties properties = mailSender.getJavaMailProperties();
@@ -26,7 +30,7 @@ public class MailSenderConfig {
         properties.setProperty("mail.transport.protocol", "true");
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
-        properties.setProperty("mail.debug", "true");
+//        properties.setProperty("mail.debug", "true");
 
         return mailSender;
     }

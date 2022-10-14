@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -72,13 +69,13 @@ public class UserController {
         return new ResponseEntity<>(Collections.singletonMap("result", "Successful user addition. Check your mail"), HttpStatus.CREATED);
     }
 
-    @PatchMapping ("/activation/{code}")
+    @GetMapping ("/activation/{code}")
     public ResponseEntity<Object> activationUserMail(@PathVariable String code){
         Optional<User> searchResult = repository.findByActivationCode(code);
         if(searchResult.isPresent()){
             User user = searchResult.get();
             userService.updateUserToUserRole(user);
-            return new ResponseEntity<>(Collections.singletonMap("result", "Mail successfully confirmed"), HttpStatus.CREATED);
+            return new ResponseEntity<>(Collections.singletonMap("result", "Mail successfully confirmed"), HttpStatus.OK);
         }
         return new ResponseEntity<>(Collections.singletonMap("result", "User with this code does not exist"), HttpStatus.NOT_FOUND);
     }
