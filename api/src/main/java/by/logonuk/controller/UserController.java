@@ -4,6 +4,7 @@ import by.logonuk.controller.requests.UserCreateRequest;
 import by.logonuk.domain.User;
 import by.logonuk.domain.embed.TechnicalDatesAndInfo;
 import by.logonuk.domain.embed.user.Credentials;
+import by.logonuk.domain.enums.SystemRoles;
 import by.logonuk.repository.UserRepository;
 import by.logonuk.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +65,9 @@ public class UserController {
         user.setTechnicalDatesAndInfo(techDateInf);
         user.setIsMailActivated(false);
 
-        userService.createUserWithAnonymousRole(user);
-
-        return new ResponseEntity<>(Collections.singletonMap("result", "Successful user addition. Check your mail"), HttpStatus.CREATED);
+        User savedUser = userService.createUserWithAnonymousRole(user);
+        return new ResponseEntity<>(Collections.singletonMap("result", userService.responseUserWithRoles(savedUser, SystemRoles.ROLE_ANONYMOUS)), HttpStatus.CREATED);
+//        return new ResponseEntity<>(Collections.singletonMap("result", "Successful user addition. Check your mail"), HttpStatus.CREATED);
     }
 
     @GetMapping ("/activation/{code}")

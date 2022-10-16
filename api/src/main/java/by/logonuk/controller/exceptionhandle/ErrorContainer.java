@@ -21,5 +21,7 @@ public class ErrorContainer {
 
     private int errorCode;
 
-    private String e;
+    private String errorClass;
+
+    private String message;
 }

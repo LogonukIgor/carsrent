@@ -15,7 +15,7 @@ spring:
       maximum-pool-size: 10
       driver-class-name: org.postgresql.Driver
     username: postgres
-    password: root
+    password: postgres
     url: "jdbc:postgresql://localhost:5432/carsrent"
 #  mail:
 #    host: "smtp.gmail.com"

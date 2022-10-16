@@ -60,9 +60,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 /*For swagger access only*/
-//                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
-//                .antMatchers("/actuator/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
+                .antMatchers("/v3/api-docs/**", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui/**", "/webjars/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui/index").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/guest/**").permitAll()
                 .antMatchers("/registration/**").permitAll()

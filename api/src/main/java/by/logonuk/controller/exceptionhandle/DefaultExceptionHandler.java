@@ -21,7 +21,8 @@ public class DefaultExceptionHandler {
                 .exceptionId(UUIDGenerator.generateUUID())
                 .errorCode(2)
                 .errorMessage(e.getMessage())
-                .e(e.getClass().toString())
+                .errorClass(e.getClass().toString())
+                .message("DAO")
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
@@ -35,7 +36,8 @@ public class DefaultExceptionHandler {
                 .exceptionId(UUIDGenerator.generateUUID())
                 .errorCode(3)
                 .errorMessage(e.getMessage())
-                .e(e.getClass().toString())
+                .errorClass(e.getClass().toString())
+                .message("Enum!!!!")
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
@@ -49,7 +51,8 @@ public class DefaultExceptionHandler {
                 .exceptionId(UUIDGenerator.generateUUID())
                 .errorCode(1)
                 .errorMessage("General error")
-                .e(e.getClass().toString())
+                .errorClass(e.getClass().toString())
+                .message("")
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.INTERNAL_SERVER_ERROR);

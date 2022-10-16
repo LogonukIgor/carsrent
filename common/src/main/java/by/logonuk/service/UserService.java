@@ -1,5 +1,6 @@
 package by.logonuk.service;
 
+import by.logonuk.domain.Role;
 import by.logonuk.domain.User;
 import by.logonuk.domain.enums.SystemRoles;
 import by.logonuk.repository.RoleRepository;
@@ -7,8 +8,12 @@ import by.logonuk.repository.UserRepository;
 import by.logonuk.service.mailsender.MailSenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -46,5 +51,19 @@ public class UserService {
     userRepository.save(user);
     userRepository.getRoleToUser(user.getId(), roleRepository.findByRoleName(SystemRoles.ROLE_USER).getId());
     return user;
+  }
+
+//  @Transactional()
+  public User responseUserWithRoles(User savedUser, SystemRoles... systemRolesArray){
+    Set<Role> roles = savedUser.getRoles();
+    Set<Role> updatedRoles = new HashSet<>();
+    if(!CollectionUtils.isEmpty(roles)){
+      updatedRoles.addAll(roles);
+    }
+    for (SystemRoles systemRoles : systemRolesArray) {
+      updatedRoles.add(roleRepository.findByRoleName(systemRoles));
+    }
+    savedUser.setRoles(updatedRoles);
+    return savedUser;
   }
 }
