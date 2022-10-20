@@ -1,5 +1,6 @@
 package by.logonuk.service.mailsender;
 
+import by.logonuk.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -18,5 +19,14 @@ public class MailSenderService {
         message.setText(body);
 
         mailSender.send(message);
+    }
+
+    public void sendMailToUserActivator(User user) {
+        sendEmail(
+                user.getCredentials().getMail(),
+                "Mail confirmation",
+                String.format(
+                        "Follow the link to confirm: http://localhost:8080/users/activation?code=%s",
+                        user.getActivationCode()));
     }
 }

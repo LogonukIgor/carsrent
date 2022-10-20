@@ -30,7 +30,7 @@ create table if not exists users
     user_password     varchar(200)                              not null,
     user_mail         varchar(100)                              not null,
     activation_code   varchar(50),
-    is_mail_activated bool         default false                not null
+    is_mail_activated boolean      default false                not null
 );
 
 alter table users
@@ -51,7 +51,7 @@ create index if not exists users_password_index
 create unique index if not exists users_user_login_uindex
     on users (user_login);
 
-create table if not exists cars_manufactury
+create table if not exists cars_manufacturer
 (
     id                integer      default nextval('cars_rent.cars_manufactury_brand_id_seq'::regclass) not null
         constraint cars_manufactury_pk
@@ -63,19 +63,16 @@ create table if not exists cars_manufactury
     is_deleted        boolean      default false                                                        not null
 );
 
-alter table cars_manufactury
+alter table cars_manufacturer
     owner to postgres;
 
-alter sequence cars_manufactury_brand_id_seq owned by cars_manufactury.id;
+alter sequence cars_manufactury_brand_id_seq owned by cars_manufacturer.id;
 
 create unique index if not exists cars_manufactury_brand_uindex
-    on cars_manufactury (brand);
-
-create unique index if not exists cars_manufactury_pk
-    on cars_manufactury (id);
+    on cars_manufacturer (brand);
 
 create unique index if not exists cars_manufactury_brand_id_uindex
-    on cars_manufactury (id);
+    on cars_manufacturer (id);
 
 create table if not exists classification
 (
@@ -94,12 +91,6 @@ alter table classification
 
 alter sequence class_class_id_seq owned by classification.id;
 
-create unique index if not exists class_description_uindex
-    on classification (description);
-
-create unique index if not exists classes_class_uindex
-    on classification (classification_letter);
-
 create unique index if not exists class_class_id_uindex
     on classification (id);
 
@@ -111,13 +102,13 @@ create table if not exists cars
     is_in_stock       boolean      default true                                           not null,
     is_deleted        boolean      default false                                          not null,
     engine_volume     double precision                                                    not null,
-    year_of_issue     integer,
     number_of_seats   integer      default 5                                              not null,
     air_conditioner   boolean      default true                                           not null,
     cost_per_day      double precision                                                    not null,
     creation_date     timestamp(6) default CURRENT_TIMESTAMP(6)                           not null,
     modification_date timestamp(6) default CURRENT_TIMESTAMP(6)                           not null,
-    transmission      varchar(15)                                                         not null
+    transmission      varchar(15)                                                         not null,
+    date_of_issue     timestamp(6)                                                        not null
 );
 
 alter table cars
@@ -142,11 +133,11 @@ create table if not exists deal
     id                bigint       default nextval('cars_rent.l_users_cars_id_seq'::regclass) not null
         constraint l_users_cars_pk
             primary key,
-    user_id           integer                                                                 not null
+    user_id           bigint                                                                  not null
         constraint l_users_cars_users_id_fk
             references users
             on update cascade on delete cascade,
-    car_id            integer                                                                 not null
+    car_id            bigint                                                                  not null
         constraint l_users_cars_cars_car_id_fk
             references cars
             on update cascade on delete cascade,
@@ -162,12 +153,6 @@ alter table deal
     owner to postgres;
 
 alter sequence l_users_cars_id_seq owned by deal.id;
-
-create unique index if not exists l_users_cars_car_id_uindex
-    on deal (car_id);
-
-create unique index if not exists l_users_cars_user_id_uindex
-    on deal (user_id);
 
 create unique index if not exists l_users_cars_id_uindex
     on deal (id);
@@ -186,6 +171,12 @@ create index if not exists order_return_date_index
 
 create index if not exists order_price_index
     on deal (price);
+
+create unique index if not exists l_users_cars_user_id_uindex
+    on deal (user_id);
+
+create unique index if not exists l_users_cars_car_id_uindex
+    on deal (car_id);
 
 create table if not exists models
 (
@@ -287,8 +278,8 @@ create table if not exists l_brand_model_class
         constraint l_brand_model_class_pk
             primary key,
     brand_id          integer                                   not null
-        constraint l_brand_model_class_cars_manufactury_id_fk
-            references cars_manufactury
+        constraint l_brand_model_class_cars_manufacturer_id_fk
+            references cars_manufacturer
             on update cascade on delete cascade,
     model_id          integer                                   not null
         constraint l_brand_model_class_models_id_fk

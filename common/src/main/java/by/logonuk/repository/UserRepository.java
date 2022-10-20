@@ -6,16 +6,22 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long>{
-    Optional<User> findByCredentialsLogin(String login);
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByUserName(String username);
+    Optional<User> findByCredentialsLoginAndTechnicalInfoIsDeleted(String login, Boolean isDeleted);
+
+    Optional<User> findByIdAndTechnicalInfoIsDeleted(Long id, Boolean isDeleted);
+
+    List<User> findAllByTechnicalInfoIsDeleted(Boolean isDeleted);
+
+    Optional<User> findByActivationCodeAndTechnicalInfoIsDeleted(String activationCode, Boolean isDeleted);
+
+    User findByUserNameAndTechnicalInfoIsDeleted(String username, Boolean isDeleted);
 
     @Modifying
     @Query(value = "insert into cars_rent.l_role_user(user_id, role_id) values (:user_id, :role_id)", nativeQuery = true)
-    void getRoleToUser(@Param("user_id")Long userId, @Param("role_id")Long roleId);
-
-    Optional<User> findByActivationCode(String activationCode);
+    void getRoleToUser(@Param("user_id") Long userId, @Param("role_id") Long roleId);
 }

@@ -1,8 +1,7 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.embed.TechnicalDatesAndInfo;
+import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.domain.embed.user.Credentials;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -40,7 +39,7 @@ public class User {
             @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
             @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
     })
-    private TechnicalDatesAndInfo technicalDatesAndInfo;
+    private TechnicalInfo technicalInfo;
 
     @Embedded
     @AttributeOverrides({

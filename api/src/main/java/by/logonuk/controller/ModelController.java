@@ -18,13 +18,14 @@ public class ModelController {
     private final ModelRepository repository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findById(@PathVariable String id){
+    public ResponseEntity<Object> findById(@PathVariable String id) {
         int modelId = Integer.getInteger(id);
 
         return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(modelId)), HttpStatus.OK);
     }
+
     @GetMapping
-    public ResponseEntity<Object> findAllModels(){
+    public ResponseEntity<Object> findAllModels() {
         return new ResponseEntity<>(Collections.singletonMap("result", repository.findAll()), HttpStatus.OK);
     }
 }

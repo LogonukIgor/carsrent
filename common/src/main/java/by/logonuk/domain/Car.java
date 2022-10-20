@@ -1,6 +1,6 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.embed.TechnicalDatesAndInfo;
+import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.domain.enums.Transmissions;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -24,8 +25,8 @@ public class Car {
     @Column(name = "engine_volume")
     private Double engineVolume;
 
-    @Column(name = "year_of_issue")
-    private Integer yearOfIssue;
+    @Column(name = "date_of_issue")
+    private Timestamp dateOfIssue;
 
     @Column(name = "number_of_seats")
     private Integer numberOfSeats;
@@ -47,7 +48,7 @@ public class Car {
             @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
             @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
     })
-    private TechnicalDatesAndInfo technicalDatesAndInfo;
+    private TechnicalInfo technicalInfo;
 
     @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference

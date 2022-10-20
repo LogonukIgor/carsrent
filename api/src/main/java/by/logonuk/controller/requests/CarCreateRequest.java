@@ -1,13 +1,17 @@
 package by.logonuk.controller.requests;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
+@ApiModel(description = "Model for car request")
 public class CarCreateRequest {
 
     private Double engineVolume;
 
-    private Integer yearOfIssue;
+    private Timestamp dateOfIssue;
 
     private Integer numberOfSeats;
 
@@ -22,4 +26,6 @@ public class CarCreateRequest {
     private String brand;
 
     private String countryOfOrigin;
+
+    private Boolean airConditioner;
 }

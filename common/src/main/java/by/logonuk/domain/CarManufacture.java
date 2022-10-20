@@ -1,10 +1,9 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.embed.TechnicalDatesAndInfo;
+import by.logonuk.domain.embed.TechnicalInfo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.AttributeOverride;
@@ -22,8 +21,8 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "cars_manufactury")
-public class CarManufactury {
+@Table(name = "cars_manufacturer")
+public class CarManufacture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,10 +41,10 @@ public class CarManufactury {
             @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
             @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
     })
-    private TechnicalDatesAndInfo technicalDatesAndInfo;
+    private TechnicalInfo technicalInfo;
 
-    @OneToOne(mappedBy = "carManufactury", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(mappedBy = "carManufacture", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonBackReference
-    @JsonIgnoreProperties("carManufactury")
+    @JsonIgnoreProperties("carManufacture")
     private Library library;
 }

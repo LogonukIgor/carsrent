@@ -18,14 +18,17 @@ public class LibraryController {
 
     private final LibraryRepository repository;
 
+    private static final String RESULT = "result";
+
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findById(@PathVariable String id){
+    public ResponseEntity<Object> findById(@PathVariable String id) {
         long libraryId = Long.parseLong(id);
 
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(libraryId)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findById(libraryId)), HttpStatus.OK);
     }
+
     @GetMapping
-    public ResponseEntity<Object> findAllFields(){
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findAll()), HttpStatus.OK);
+    public ResponseEntity<Object> findAllFields() {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAll()), HttpStatus.OK);
     }
 }

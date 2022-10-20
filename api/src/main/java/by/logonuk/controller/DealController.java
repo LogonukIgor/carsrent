@@ -18,14 +18,17 @@ public class DealController {
 
     private final DealRepository repository;
 
+    private static final String RESULT = "result";
+
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findById(@PathVariable String id){
+    public ResponseEntity<Object> findById(@PathVariable String id) {
         long userId = Long.parseLong(id);
 
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(userId)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findById(userId)), HttpStatus.OK);
     }
+
     @GetMapping
-    public ResponseEntity<Object> findAllDeals(){
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findAll()), HttpStatus.OK);
+    public ResponseEntity<Object> findAllDeals() {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAll()), HttpStatus.OK);
     }
 }

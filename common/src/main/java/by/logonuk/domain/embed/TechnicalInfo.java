@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TechnicalDatesAndInfo {
+public class TechnicalInfo {
 
     private Timestamp creationDate;
 

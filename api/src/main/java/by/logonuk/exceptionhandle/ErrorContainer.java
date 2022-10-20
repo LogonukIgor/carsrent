@@ -1,4 +1,4 @@
-package by.logonuk.controller.exceptionhandle;
+package by.logonuk.exceptionhandle;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +23,5 @@ public class ErrorContainer {
 
     private String errorClass;
 
-    private String message;
+//    private String message;
 }

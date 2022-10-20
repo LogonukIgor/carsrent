@@ -1,11 +1,11 @@
 package by.logonuk.service;
 
 import by.logonuk.domain.Car;
-import by.logonuk.domain.CarManufactury;
+import by.logonuk.domain.CarManufacture;
 import by.logonuk.domain.Classification;
+import by.logonuk.domain.Library;
 import by.logonuk.domain.Model;
-import by.logonuk.domain.embed.TechnicalDatesAndInfo;
-import by.logonuk.repository.CarManufacturyRepository;
+import by.logonuk.repository.CarManufactureRepository;
 import by.logonuk.repository.CarRepository;
 import by.logonuk.repository.ClassificationRepository;
 import by.logonuk.repository.LibraryRepository;
@@ -21,46 +21,64 @@ import java.util.Optional;
 public class CarService {
 
     private final CarRepository carRepository;
+
     private final ModelRepository modelRepository;
 
-    private final CarManufacturyRepository carManufacturyRepository;
+    private final CarManufactureRepository carManufactureRepository;
 
     private final ClassificationRepository classificationRepository;
 
     private final LibraryRepository libraryRepository;
 
     @Transactional
-    public void createCar(Car car, Model model, Classification classification, CarManufactury carManufactury, TechnicalDatesAndInfo technicalDatesAndInfo){
+    public Car createCar(Car car, Model model, Classification classification, CarManufacture carManufacture){
         Model searchModel = modelValid(model);
-
-        CarManufactury searchCarManufactury = carManufacturyValid(carManufactury);
-
+        CarManufacture searchCarManufacture = carManufactureValid(carManufacture);
         Classification searchClassification = classificationRepository.findByClassificationLetter(classification.getClassificationLetter());
 
         carRepository.save(car);
 
-        libraryRepository.customSave(searchCarManufactury.getId(), searchModel.getId(), searchClassification.getId(), car.getId());
+        libraryRepository.customSave(searchCarManufacture.getId(), searchModel.getId(), searchClassification.getId(), car.getId());
+        return carForResponse(car);
+    }
+
+    @Transactional
+    public Car updateCar(Car car, Model model, Classification classification, CarManufacture carManufacture){
+        if(car.getId()==0L){
+            Model searchModel = modelValid(model);
+            CarManufacture searchCarManufacture = carManufactureValid(carManufacture);
+            Classification searchClassification = classificationRepository.findByClassificationLetter(classification.getClassificationLetter());
+
+            carRepository.save(car);
+
+            libraryRepository.customSave(searchCarManufacture.getId(), searchModel.getId(), searchClassification.getId(), car.getId());
+        }
+        return carForResponse(car);
     }
 
     @Transactional
     public Model modelValid(Model model){
         Optional<Model> searchModel = modelRepository.findByModelName(model.getModelName());
         if(searchModel.isPresent()){
-            Model mainModel = searchModel.get();
-            return mainModel;
+            return searchModel.get();
         }
         modelRepository.save(model);
         return model;
     }
 
     @Transactional
-    public CarManufactury carManufacturyValid(CarManufactury carManufactury){
-        Optional<CarManufactury> searchCarManufactury = carManufacturyRepository.findByCountryOfOrigin(carManufactury.getCountryOfOrigin());
-        if(searchCarManufactury.isPresent()){
-            CarManufactury mainCarManufactury = searchCarManufactury.get();
-            return mainCarManufactury;
+    public CarManufacture carManufactureValid(CarManufacture carManufacture){
+        Optional<CarManufacture> searchCarManufacture = carManufactureRepository.findByCountryOfOrigin(carManufacture.getCountryOfOrigin());
+        if(searchCarManufacture.isPresent()){
+            return searchCarManufacture.get();
         }
-        carManufacturyRepository.save(carManufactury);
-        return carManufactury;
+        carManufactureRepository.save(carManufacture);
+        return carManufacture;
+    }
+
+    private Car carForResponse(Car savedCar){
+        Library library = libraryRepository.findByCarId(savedCar.getId());
+        savedCar.setCarInfo(library);
+        return savedCar;
     }
 }

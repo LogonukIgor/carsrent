@@ -1,6 +1,6 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.embed.TechnicalDatesAndInfo;
+import by.logonuk.domain.embed.TechnicalInfo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -40,7 +40,7 @@ public class Model {
             @AttributeOverride(name = "modificationDate", column = @Column(name = "modification_date")),
             @AttributeOverride(name = "isDeleted", column = @Column(name = "is_deleted"))
     })
-    private TechnicalDatesAndInfo technicalDatesAndInfo;
+    private TechnicalInfo technicalInfo;
 
     @OneToOne(mappedBy = "model", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonBackReference

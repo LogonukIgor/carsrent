@@ -1,17 +1,18 @@
 package by.logonuk.controller;
 
-import by.logonuk.controller.mapping.CarMapping;
+import by.logonuk.controller.mapping.CarCreateMapping;
+import by.logonuk.controller.mapping.CarUpdateMapping;
 import by.logonuk.controller.requests.CarCreateRequest;
+import by.logonuk.controller.requests.CarUpdateRequest;
+import by.logonuk.controller.responses.CarResponse;
+import by.logonuk.controller.responses.UserResponse;
 import by.logonuk.domain.Car;
-import by.logonuk.domain.CarManufactury;
-import by.logonuk.domain.Classification;
-import by.logonuk.domain.Model;
-import by.logonuk.domain.embed.TechnicalDatesAndInfo;
-import by.logonuk.domain.enums.ClassificationLetter;
-import by.logonuk.domain.enums.Transmissions;
+import by.logonuk.domain.User;
+import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.repository.CarRepository;
 import by.logonuk.service.CarService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,33 +32,70 @@ public class CarController {
 
     private final CarService carService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> findById(@PathVariable String id){
-        long userId = Long.parseLong(id);
+    private final ConversionService converter;
 
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findById(userId)), HttpStatus.OK);
+    private static final String RESULT = "result";
+
+    private static final String CAR_NOT_FOUND = "Car with this credentials does not exist";
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> findById(@PathVariable String id) {
+        long userId = Long.parseLong(id);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findByIdAndTechnicalInfoIsDeleted(userId, false)), HttpStatus.OK);
     }
+
     @GetMapping
-    public ResponseEntity<Object> findAllCars(){
-        return new ResponseEntity<>(Collections.singletonMap("result", repository.findAll()), HttpStatus.OK);
+    public ResponseEntity<Object> findAllCars() {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false)), HttpStatus.OK);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createCar(@RequestBody CarCreateRequest carCreateRequest){
+    public ResponseEntity<Object> createCar(@RequestBody CarCreateRequest carCreateRequest) {
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
-        TechnicalDatesAndInfo carTechDateInf = new TechnicalDatesAndInfo(timestamp, timestamp, false);
+        TechnicalInfo technicalInfo = new TechnicalInfo(timestamp, timestamp, false);
 
-        Car car = CarMapping.carMapping(carCreateRequest, carTechDateInf);
+        CarCreateMapping carCreateMapping = new CarCreateMapping(carCreateRequest, technicalInfo);
 
-        CarManufactury carManufactury = CarMapping.carManufacturyMapping(carCreateRequest, carTechDateInf);
+        Car car = carService.createCar(carCreateMapping.carMapping(), carCreateMapping.modelMapping(), carCreateMapping.classificationMapping(), carCreateMapping.carManufactureMapping());
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(car, CarResponse.class)), HttpStatus.CREATED);
+    }
 
-        Classification classification = CarMapping.classificationMapping(carCreateRequest);
+    @PutMapping
+    @Transactional
+    public ResponseEntity<Object> updateCar(@RequestBody CarUpdateRequest carUpdateRequest) {
+        CarUpdateMapping carCreateMapping = new CarUpdateMapping(carUpdateRequest, new Timestamp((new Date().getTime())));
+        Car updatedCar = carService.updateCar(carCreateMapping.carMapping(), carCreateMapping.modelMapping(), carCreateMapping.classificationMapping(), carCreateMapping.carManufactureMapping());
 
-        Model model = CarMapping.modelMapping(carCreateRequest, carTechDateInf);
+        if (updatedCar.getId() != 0L) {
+            return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedCar, UserResponse.class)), HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, CAR_NOT_FOUND), HttpStatus.NOT_FOUND);
+    }
 
-        carService.createCar(car, model, classification, carManufactury, carTechDateInf);
-        return new ResponseEntity<>(Collections.singletonMap("result", "Successful car addition"), HttpStatus.CREATED);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteCar(@PathVariable String id) {
+        long carId = Long.parseLong(id);
+        Optional<Car> searchCar = repository.findByIdAndTechnicalInfoIsDeleted(carId, false);
+        if (searchCar.isPresent()) {
+            Car car = searchCar.get();
+            car.getTechnicalInfo().setIsDeleted(true);
+            repository.save(car);
+            return new ResponseEntity<>(Collections.singletonMap(RESULT, "successful deleted"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, CAR_NOT_FOUND), HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/delete/hard/{id}")
+    public ResponseEntity<Object> adminDeleteUser(@PathVariable String id) {
+        long carId = Long.parseLong(id);
+        Optional<Car> searchCar = repository.findById(carId);
+        if (searchCar.isPresent()) {
+            Car car = searchCar.get();
+            repository.delete(car);
+            return new ResponseEntity<>(Collections.singletonMap(RESULT, "successful deleted"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, CAR_NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 }
