@@ -5,6 +5,7 @@ import by.logonuk.controller.requests.UserUpdateRequest;
 import by.logonuk.controller.responses.UserResponse;
 import by.logonuk.domain.User;
 import by.logonuk.exception.NoSuchEntityException;
+import by.logonuk.repository.RoleRepository;
 import by.logonuk.repository.UserRepository;
 import by.logonuk.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,7 +54,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false).stream().map(i -> converter.convert(i, UserResponse.class)).collect(Collectors.toList())), HttpStatus.OK);
     }
 
     @PostMapping
@@ -94,7 +98,8 @@ public class UserController {
         long userId = Long.parseLong(id);
         Optional<User> searchUser = repository.findById(userId);
         User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", userId)));
-        repository.delete(user);
+        user.setRoles(new HashSet<>());
+        repository.customUserDelete(userId);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
     }
 }

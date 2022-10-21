@@ -1,5 +1,7 @@
 package by.logonuk.controller.responses;
 
+import by.logonuk.domain.Deal;
+import by.logonuk.domain.DrivingLicence;
 import by.logonuk.domain.Role;
 import by.logonuk.domain.embed.user.Credentials;
 import io.swagger.annotations.ApiModel;
@@ -20,4 +22,8 @@ public class UserResponse {
     private Credentials credentials;
 
     private Set<Role> roles;
+
+    private DrivingLicence drivingLicence;
+
+    private Deal deal;
 }

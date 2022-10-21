@@ -24,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "insert into cars_rent.l_role_user(user_id, role_id) values (:user_id, :role_id)", nativeQuery = true)
     void getRoleToUser(@Param("user_id") Long userId, @Param("role_id") Long roleId);
+
+    @Modifying
+    @Query(value = "delete from cars_rent.users where id = :user_id", nativeQuery = true)
+    void customUserDelete(@Param("user_id") Long userId);
 }

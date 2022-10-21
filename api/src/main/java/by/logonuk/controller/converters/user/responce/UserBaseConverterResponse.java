@@ -16,6 +16,8 @@ public abstract class UserBaseConverterResponse<S, T> implements Converter<S, T>
         userResponse.setCredentials(source.getCredentials());
         Set<Role> roles = source.getRoles();
         userResponse.setRoles(roles);
+        userResponse.setDeal(source.getDeal());
+        userResponse.setDrivingLicence(source.getDrivingLicence());
         return userResponse;
     }
 }
