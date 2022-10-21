@@ -8,6 +8,7 @@ import by.logonuk.domain.Model;
 import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.domain.enums.ClassificationLetter;
 import by.logonuk.domain.enums.Transmissions;
+import by.logonuk.exception.CustomIllegalArgumentException;
 import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.CarRepository;
 import lombok.AllArgsConstructor;
@@ -31,19 +32,28 @@ public class CarUpdateMapper {
 
     public Car carMapping() throws IllegalArgumentException {
         Car car = new Car();
+
         car.setId(Long.parseLong(carUpdateRequest.getCarId()));
         car.setEngineVolume(carUpdateRequest.getEngineVolume());
         car.setDateOfIssue(carUpdateRequest.getDateOfIssue());
         car.setAirConditioner(carUpdateRequest.getAirConditioner());
         car.setNumberOfSeats(carUpdateRequest.getNumberOfSeats());
         car.setCostPerDay(carUpdateRequest.getCostPerDay());
-        car.setTransmission(Transmissions.valueOf(carUpdateRequest.getTransmission().toUpperCase()));
         car.setIsInStock(true);
+
+        try {
+            car.setTransmission(Transmissions.valueOf(carUpdateRequest.getTransmission().toUpperCase()));
+        }catch (IllegalArgumentException e){
+            throw new CustomIllegalArgumentException("Transmission must be selected from this list: automatic, manual");
+        }
+
         Optional<Car> searchCar = carRepository.findByIdAndTechnicalInfoIsDeleted(Long.parseLong(carUpdateRequest.getCarId()), false);
-        Car originalCar = searchCar.orElseThrow(()-> new NoSuchEntityException("Car with id = " + carUpdateRequest.getCarId()+" does not exist"));
+        Car originalCar = searchCar.orElseThrow(() -> new NoSuchEntityException("Car with id = " + carUpdateRequest.getCarId() + " does not exist"));
+
         TechnicalInfo technicalInfo = originalCar.getTechnicalInfo();
         technicalInfo.setModificationDate(new Timestamp(new Date().getTime()));
         car.setTechnicalInfo(technicalInfo);
+
         car.setId(Long.parseLong(carUpdateRequest.getCarId()));
         return car;
     }
@@ -67,7 +77,11 @@ public class CarUpdateMapper {
 
     public Classification classificationMapping() throws IllegalArgumentException {
         Classification classification = new Classification();
-        classification.setClassificationLetter(ClassificationLetter.valueOf(carUpdateRequest.getClassification().toUpperCase()));
+        try {
+            classification.setClassificationLetter(ClassificationLetter.valueOf(carUpdateRequest.getClassification().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new CustomIllegalArgumentException("Classification must be selected from this list: a, b, c, d, e, f, j, s");
+        }
         return classification;
     }
 }

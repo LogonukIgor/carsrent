@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
@@ -54,7 +55,7 @@ public class CarController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createCar(@RequestBody CarCreateRequest carCreateRequest) {
+    public ResponseEntity<Object> createCar(@Valid @RequestBody CarCreateRequest carCreateRequest) {
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
         TechnicalInfo technicalInfo = new TechnicalInfo(timestamp, timestamp, false);
@@ -65,7 +66,7 @@ public class CarController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Object> updateCar(@RequestBody CarUpdateRequest carUpdateRequest) {
+    public ResponseEntity<Object> updateCar(@Valid @RequestBody CarUpdateRequest carUpdateRequest) {
         CarUpdateMapper carCreateMapping = new CarUpdateMapper(repository, carUpdateRequest, new Timestamp((new Date().getTime())));
         Car updatedCar = carService.updateCar(carCreateMapping.carMapping(), carCreateMapping.modelMapping(), carCreateMapping.classificationMapping(), carCreateMapping.carManufactureMapping());
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedCar, CarResponse.class)), HttpStatus.CREATED);

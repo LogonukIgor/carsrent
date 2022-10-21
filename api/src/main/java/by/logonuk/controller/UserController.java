@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -59,7 +60,7 @@ public class UserController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         User user = converter.convert(userCreateRequest, User.class);
         User savedUser = userService.createUserWithAnonymousRole(user);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(savedUser, UserResponse.class)), HttpStatus.CREATED);
@@ -77,7 +78,7 @@ public class UserController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Object> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         User user = converter.convert(userUpdateRequest, User.class);
         User updatedUser = userService.updateUser(user);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedUser, UserResponse.class)), HttpStatus.CREATED);

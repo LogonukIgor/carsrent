@@ -8,6 +8,7 @@ import by.logonuk.domain.Model;
 import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.domain.enums.ClassificationLetter;
 import by.logonuk.domain.enums.Transmissions;
+import by.logonuk.exception.CustomIllegalArgumentException;
 import lombok.Data;
 
 @Data
@@ -29,7 +30,11 @@ public class CarCreateMapper {
         car.setAirConditioner(true);
         car.setNumberOfSeats(carCreateRequest.getNumberOfSeats());
         car.setCostPerDay(carCreateRequest.getCostPerDay());
+        try {
         car.setTransmission(Transmissions.valueOf(carCreateRequest.getTransmission().toUpperCase()));
+        }catch (IllegalArgumentException e){
+            throw new CustomIllegalArgumentException("Transmission must be selected from this list: automatic, manual");
+        }
         car.setTechnicalInfo(technicalInfo);
         car.setIsInStock(true);
         return car;
@@ -50,9 +55,13 @@ public class CarCreateMapper {
         return model;
     }
 
-    public Classification classificationMapping() throws IllegalArgumentException {
+    public Classification classificationMapping(){
         Classification classification = new Classification();
-        classification.setClassificationLetter(ClassificationLetter.valueOf(carCreateRequest.getClassification().toUpperCase()));
+        try {
+            classification.setClassificationLetter(ClassificationLetter.valueOf(carCreateRequest.getClassification().toUpperCase()));
+        }catch (IllegalArgumentException e){
+            throw new CustomIllegalArgumentException("Classification must be selected from this list: a, b, c, d, e, f, j, s");
+        }
         return classification;
     }
 }
