@@ -44,16 +44,16 @@ public class CarService {
 
     @Transactional
     public Car updateCar(Car car, Model model, Classification classification, CarManufacture carManufacture){
-        if(car.getId()==0L){
-            Model searchModel = modelValid(model);
-            CarManufacture searchCarManufacture = carManufactureValid(carManufacture);
-            Classification searchClassification = classificationRepository.findByClassificationLetter(classification.getClassificationLetter());
+        Model searchModel = modelValid(model);
+        CarManufacture searchCarManufacture = carManufactureValid(carManufacture);
+        Classification searchClassification = classificationRepository.findByClassificationLetter(classification.getClassificationLetter());
+        carRepository.save(car);
 
-            carRepository.save(car);
-
-            libraryRepository.customSave(searchCarManufacture.getId(), searchModel.getId(), searchClassification.getId(), car.getId());
-        }
-        return carForResponse(car);
+        Library library = libraryRepository.findByCarId(car.getId());
+        library.setModel(searchModel);
+        library.setCarManufacture(searchCarManufacture);
+        library.setClassification(searchClassification);
+        return carForResponse(car, library);
     }
 
     @Transactional
@@ -78,6 +78,10 @@ public class CarService {
 
     private Car carForResponse(Car savedCar){
         Library library = libraryRepository.findByCarId(savedCar.getId());
+        savedCar.setCarInfo(library);
+        return savedCar;
+    }
+    private Car carForResponse(Car savedCar, Library library){
         savedCar.setCarInfo(library);
         return savedCar;
     }

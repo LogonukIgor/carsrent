@@ -11,13 +11,13 @@ import by.logonuk.domain.enums.Transmissions;
 import lombok.Data;
 
 @Data
-public class CarCreateMapping {
+public class CarCreateMapper {
 
     private CarCreateRequest carCreateRequest;
 
     private TechnicalInfo technicalInfo;
 
-    public CarCreateMapping(CarCreateRequest carCreateRequest, TechnicalInfo technicalInfo) {
+    public CarCreateMapper(CarCreateRequest carCreateRequest, TechnicalInfo technicalInfo) {
         this.carCreateRequest = carCreateRequest;
         this.technicalInfo = technicalInfo;
     }

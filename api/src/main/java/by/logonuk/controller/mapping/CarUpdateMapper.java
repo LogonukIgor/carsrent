@@ -1,6 +1,5 @@
 package by.logonuk.controller.mapping;
 
-import by.logonuk.controller.requests.CarCreateRequest;
 import by.logonuk.controller.requests.CarUpdateRequest;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.CarManufacture;
@@ -9,7 +8,9 @@ import by.logonuk.domain.Model;
 import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.domain.enums.ClassificationLetter;
 import by.logonuk.domain.enums.Transmissions;
+import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.CarRepository;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +20,14 @@ import java.util.Date;
 import java.util.Optional;
 
 @Data
-public class CarUpdateMapping {
+@AllArgsConstructor
+public class CarUpdateMapper {
 
     private CarRepository carRepository;
 
     private CarUpdateRequest carUpdateRequest;
 
     private Timestamp timestamp;
-
-    public CarUpdateMapping(@Autowired CarRepository carRepository, CarUpdateRequest carUpdateRequest, Timestamp timestamp) {
-        this.carRepository = carRepository;
-        this.carUpdateRequest = carUpdateRequest;
-        this.timestamp = timestamp;
-    }
-
-    public CarUpdateMapping(CarUpdateRequest carUpdateRequest, Timestamp timestamp) {
-        this.carUpdateRequest = carUpdateRequest;
-        this.timestamp = timestamp;
-    }
 
     public Car carMapping() throws IllegalArgumentException {
         Car car = new Car();
@@ -48,13 +39,12 @@ public class CarUpdateMapping {
         car.setCostPerDay(carUpdateRequest.getCostPerDay());
         car.setTransmission(Transmissions.valueOf(carUpdateRequest.getTransmission().toUpperCase()));
         car.setIsInStock(true);
-        Optional<Car> searchCar = carRepository.findByIdAndTechnicalInfoIsDeleted(car.getId(), false);
-        if (searchCar.isPresent()) {
-            Car originalCar = searchCar.get();
-            TechnicalInfo technicalInfo = originalCar.getTechnicalInfo();
-            technicalInfo.setModificationDate(new Timestamp(new Date().getTime()));
-            car.setTechnicalInfo(technicalInfo);
-        }
+        Optional<Car> searchCar = carRepository.findByIdAndTechnicalInfoIsDeleted(Long.parseLong(carUpdateRequest.getCarId()), false);
+        Car originalCar = searchCar.orElseThrow(()-> new NoSuchEntityException("Car with id = " + carUpdateRequest.getCarId()+" does not exist"));
+        TechnicalInfo technicalInfo = originalCar.getTechnicalInfo();
+        technicalInfo.setModificationDate(new Timestamp(new Date().getTime()));
+        car.setTechnicalInfo(technicalInfo);
+        car.setId(Long.parseLong(carUpdateRequest.getCarId()));
         return car;
     }
 

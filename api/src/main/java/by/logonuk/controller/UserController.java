@@ -93,13 +93,13 @@ public class UserController {
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/hard/{id}")
-    public ResponseEntity<Object> adminDeleteUser(@PathVariable String id) {
-        long userId = Long.parseLong(id);
-        Optional<User> searchUser = repository.findById(userId);
-        User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", userId)));
-        user.setRoles(new HashSet<>());
-        repository.customUserDelete(userId);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
-    }
+//    @DeleteMapping("/delete/hard/{id}")
+//    public ResponseEntity<Object> adminDeleteUser(@PathVariable String id) {
+//        long userId = Long.parseLong(id);
+//        Optional<User> searchUser = repository.findById(userId);
+//        User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", userId)));
+//        user.setRoles(new HashSet<>());
+//        repository.customUserDelete(userId);
+//        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
+//    }
 }
