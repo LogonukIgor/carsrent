@@ -66,10 +66,8 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        Optional<User> searchUser =
-                userRepository.findByIdAndTechnicalInfoIsDeleted(user.getId(), false);
-        User searchedUser = searchUser.orElseThrow(
-                () -> new NoSuchEntityException("User with id = " + user.getId() + " does not exist"));
+        Optional<User> searchUser = userRepository.findByIdAndTechnicalInfoIsDeleted(user.getId(), false);
+        User searchedUser = searchUser.orElseThrow(() -> new NoSuchEntityException("User with id = " + user.getId() + " does not exist"));
         TechnicalInfo technicalInfo = searchedUser.getTechnicalInfo();
         technicalInfo.setModificationDate(new Timestamp(new Date().getTime()));
         user.setTechnicalInfo(technicalInfo);

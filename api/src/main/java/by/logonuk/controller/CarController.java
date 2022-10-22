@@ -5,7 +5,6 @@ import by.logonuk.controller.mapping.CarUpdateMapper;
 import by.logonuk.controller.requests.CarCreateRequest;
 import by.logonuk.controller.requests.CarUpdateRequest;
 import by.logonuk.controller.responses.CarResponse;
-import by.logonuk.controller.responses.UserResponse;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.exception.NoSuchEntityException;
@@ -81,16 +80,4 @@ public class CarController {
         repository.save(car);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(car, CarResponse.class)), HttpStatus.OK);
     }
-
-//    @DeleteMapping("/delete/hard/{id}")
-//    public ResponseEntity<Object> adminDeleteUser(@PathVariable String id) {
-//        long carId = Long.parseLong(id);
-//        Optional<Car> searchCar = repository.findById(carId);
-//        if (searchCar.isPresent()) {
-//            Car car = searchCar.get();
-//            repository.delete(car);
-//            return new ResponseEntity<>(Collections.singletonMap(RESULT, "successful deleted"), HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(Collections.singletonMap(RESULT, CAR_NOT_FOUND), HttpStatus.NOT_FOUND);
-//    }
 }

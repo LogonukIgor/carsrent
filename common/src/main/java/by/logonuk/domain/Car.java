@@ -2,6 +2,7 @@ package by.logonuk.domain;
 
 import by.logonuk.domain.embed.TechnicalInfo;
 import by.logonuk.domain.enums.Transmissions;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -51,7 +52,7 @@ public class Car {
     private TechnicalInfo technicalInfo;
 
     @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     @JsonIgnoreProperties(value = {"car", "user"})
     private Deal deal;
 

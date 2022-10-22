@@ -20,7 +20,7 @@ public class CarCreateRequest {
     @Min(value = 1, message = "number(engineVolume)  must be >= 1")
     private Double engineVolume;
 
-    @Past(message = "Date of issue value must be in the future or past")
+//    @Past(message = "Date of issue value must be in the future or past")
     @NotNull(message = "Car dateOfIssue must not be null")
     private Timestamp dateOfIssue;
 

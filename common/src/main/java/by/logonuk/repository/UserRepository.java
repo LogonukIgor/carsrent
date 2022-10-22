@@ -28,4 +28,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "delete from cars_rent.users where id = :user_id", nativeQuery = true)
     void customUserDelete(@Param("user_id") Long userId);
+
+//    @Query(value = "select u from User u inner join Deal d on d.user = u.deal where d.id = :deal_id")
+//    User findByDeal(@Param("deal_id") Long dealId);
+
+    @Query(value = "select * from cars_rent.users as u inner join cars_rent.deal as d on  d.user_id = u.id where d.id = :deal_id, d.is_deleted = :is_deleted", nativeQuery = true)
+    User findByDeal(@Param("deal_id") Long dealId, @Param("is_deleted") Boolean isDeleted);
 }

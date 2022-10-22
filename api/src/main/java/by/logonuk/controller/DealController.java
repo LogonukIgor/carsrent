@@ -1,18 +1,28 @@
 package by.logonuk.controller;
 
 import by.logonuk.controller.requests.DealCreateRequest;
+import by.logonuk.controller.requests.DealUpdateRequest;
+import by.logonuk.controller.responses.DealResponse;
+import by.logonuk.controller.responses.UserResponse;
 import by.logonuk.domain.Car;
+import by.logonuk.domain.Deal;
 import by.logonuk.domain.User;
+import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.DealRepository;
 import by.logonuk.service.DealService;
-import lombok.AllArgsConstructor;
+import by.logonuk.validation.CustomValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,26 +33,53 @@ public class DealController {
 
     private final DealService dealService;
 
+    private final ConversionService converter;
+
+    private final CustomValidator validator;
+
     private static final String RESULT = "result";
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Object> findById(@PathVariable String id) {
-//        long userId = Long.parseLong(id);
-//
-//        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findById(userId)), HttpStatus.OK);
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<Object> findAllDeals() {
-//        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAll()), HttpStatus.OK);
-//    }
+    private static final String DEAL_NOT_FOUND = "Deal with this %s = %d does not exist";
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> findById(@PathVariable String id) {
+        long dealId = Long.parseLong(id);
+        Optional<Deal> searchDeal = repository.findByIdAndTechnicalInfoIsDeleted(dealId, false);
+        Deal deal = searchDeal.orElseThrow(() -> new NoSuchEntityException(DEAL_NOT_FOUND.formatted("id", dealId)));
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(deal, DealResponse.class)), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> findAllDeals() {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false).stream().map(i -> converter.convert(i, DealResponse.class)).collect(Collectors.toList())), HttpStatus.OK);
+    }
 
     @PostMapping
-    public ResponseEntity<Object> createDeal(@RequestBody DealCreateRequest dealCreateRequest){
+    public ResponseEntity<Object> createDeal(@Valid @RequestBody DealCreateRequest dealCreateRequest) {
         Map<String, Object> entityMap = dealService.validateDeal(dealCreateRequest.getUserId(), dealCreateRequest.getCarId());
-        User user = (User) entityMap.get("user");
-        Car car = (Car) entityMap.get("car");
+        Deal deal = converter.convert(dealCreateRequest, Deal.class);
+        validator.validDealDate(deal.getReceivingDate(), deal.getReturnDate());
+        Deal savedDeal = dealService.createDeal((User) entityMap.get("user"), (Car) entityMap.get("car"), deal);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(savedDeal, DealResponse.class)), HttpStatus.CREATED);
+    }
 
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, "eac"), HttpStatus.CREATED);
+    @PutMapping
+    @Transactional
+    public ResponseEntity<Object> updateCar(@Valid @RequestBody DealUpdateRequest dealUpdateRequest) {
+        Map<String, Object> entityMap = dealService.validateDeal(dealUpdateRequest.getUserId(), dealUpdateRequest.getCarId());
+        Deal deal = converter.convert(dealUpdateRequest, Deal.class);
+        validator.validDealDate(deal.getReceivingDate(), deal.getReturnDate());
+        Deal updateDeal = dealService.updateDeal((User) entityMap.get("user"), (Car) entityMap.get("car"), deal);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updateDeal, DealResponse.class)), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteDeal(@PathVariable String id) {
+        long dealId = Long.parseLong(id);
+        Optional<Deal> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(dealId, false);
+        Deal deal = searchUser.orElseThrow(() -> new NoSuchEntityException(DEAL_NOT_FOUND.formatted("id", dealId)));
+        deal.getTechnicalInfo().setIsDeleted(true);
+        repository.save(deal);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(deal, UserResponse.class)), HttpStatus.OK);
     }
 }

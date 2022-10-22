@@ -15,11 +15,11 @@ public class DealCreateRequest {
     @Pattern(regexp = "^\\d*", message = "User id must contain only numbers")
     private String userId;
 
-    @NotNull(message = "Deal carId must not be null")
+//    @NotNull(message = "Deal carId must not be null")
     @Pattern(regexp = "^\\d*", message = "Car id must contain only numbers")
     private String carId;
 
-    @FutureOrPresent(message = "Receiving date value must be in the future or present")
+//    @FutureOrPresent(message = "Receiving date value must be in the future or present")
     @NotNull(message = "Deal receivingDate must not be null")
     private Timestamp receivingDate;
 

@@ -3,7 +3,6 @@ package by.logonuk.controller.converters.user.request;
 import by.logonuk.controller.requests.UserCreateRequest;
 import by.logonuk.domain.User;
 import by.logonuk.domain.embed.TechnicalInfo;
-import by.logonuk.domain.embed.user.Credentials;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;

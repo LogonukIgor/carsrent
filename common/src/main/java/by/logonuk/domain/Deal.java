@@ -1,8 +1,10 @@
 package by.logonuk.domain;
 
 import by.logonuk.domain.embed.TechnicalInfo;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,11 +40,13 @@ public class Deal {
     @OneToOne
     @JsonIgnoreProperties(value = {"deal","car"})
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @OneToOne
     @JoinColumn(name = "car_id")
     @JsonIgnoreProperties(value = {"deal", "user"})
+    @JsonManagedReference
     private Car car;
 
 }

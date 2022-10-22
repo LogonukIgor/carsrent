@@ -13,8 +13,6 @@ import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.CarRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.util.Date;

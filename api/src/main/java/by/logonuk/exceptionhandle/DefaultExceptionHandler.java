@@ -1,6 +1,7 @@
 package by.logonuk.exceptionhandle;
 
 import by.logonuk.exception.CustomIllegalArgumentException;
+import by.logonuk.exception.DateValidationException;
 import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.util.UUIDGenerator;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -136,6 +137,20 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(CustomIllegalArgumentException.class)
     public ResponseEntity<Object> handleCustomIllegalArgumentException(CustomIllegalArgumentException e) {
+
+        ErrorContainer error = ErrorContainer
+                .builder()
+                .exceptionId(UUIDGenerator.generateUUID())
+                .errorCode(8)
+                .errorMessage(e.toString())
+                .errorClass(e.getClass().toString())
+                .build();
+
+        return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DateValidationException.class)
+    public ResponseEntity<Object> handleCustomIllegalArgumentException(DateValidationException e) {
 
         ErrorContainer error = ErrorContainer
                 .builder()

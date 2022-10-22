@@ -5,7 +5,6 @@ import by.logonuk.controller.requests.UserUpdateRequest;
 import by.logonuk.controller.responses.UserResponse;
 import by.logonuk.domain.User;
 import by.logonuk.exception.NoSuchEntityException;
-import by.logonuk.repository.RoleRepository;
 import by.logonuk.repository.UserRepository;
 import by.logonuk.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -93,14 +90,4 @@ public class UserController {
         repository.save(user);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
     }
-
-//    @DeleteMapping("/delete/hard/{id}")
-//    public ResponseEntity<Object> adminDeleteUser(@PathVariable String id) {
-//        long userId = Long.parseLong(id);
-//        Optional<User> searchUser = repository.findById(userId);
-//        User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", userId)));
-//        user.setRoles(new HashSet<>());
-//        repository.customUserDelete(userId);
-//        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
-//    }
 }
