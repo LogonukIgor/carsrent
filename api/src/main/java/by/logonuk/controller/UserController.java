@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -81,8 +82,8 @@ public class UserController {
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedUser, UserResponse.class)), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable String id) {
+    @PatchMapping("/delete/{id}")
+    public ResponseEntity<Object> softUserDelete(@PathVariable String id) {
         long userId = Long.parseLong(id);
         Optional<User> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(userId, false);
         User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", userId)));

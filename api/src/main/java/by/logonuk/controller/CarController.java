@@ -1,7 +1,7 @@
 package by.logonuk.controller;
 
-import by.logonuk.controller.mapping.CarCreateMapper;
-import by.logonuk.controller.mapping.CarUpdateMapper;
+import by.logonuk.controller.converters.car.request.CarCreateMapper;
+import by.logonuk.controller.converters.car.request.CarUpdateMapper;
 import by.logonuk.controller.requests.CarCreateRequest;
 import by.logonuk.controller.requests.CarUpdateRequest;
 import by.logonuk.controller.responses.CarResponse;
@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -78,8 +79,8 @@ public class CarController {
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedCar, CarResponse.class)), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteCar(@PathVariable String id) {
+    @PatchMapping("/delete/{id}")
+    public ResponseEntity<Object> softCarDelete(@PathVariable String id) {
         long carId = Long.parseLong(id);
         Optional<Car> searchCar = repository.findByIdAndTechnicalInfoIsDeleted(carId, false);
         Car car = searchCar.orElseThrow(()-> new NoSuchEntityException(CAR_NOT_FOUND.formatted("id", carId)));

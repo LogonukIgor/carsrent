@@ -1,4 +1,4 @@
-package by.logonuk.controller.mapping;
+package by.logonuk.controller.converters.car.request;
 
 import by.logonuk.controller.requests.CarCreateRequest;
 import by.logonuk.domain.Car;
