@@ -1,6 +1,5 @@
 package by.logonuk.security;
 
-import by.logonuk.domain.Role;
 import by.logonuk.domain.User;
 import by.logonuk.repository.RoleRepository;
 import by.logonuk.repository.UserRepository;

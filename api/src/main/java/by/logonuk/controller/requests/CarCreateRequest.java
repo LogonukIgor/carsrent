@@ -5,9 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
@@ -16,11 +14,9 @@ import java.sql.Timestamp;
 public class CarCreateRequest {
 
     @NotNull(message = "Car engineVolume must not be null")
-//    @Positive(message = "number(engineVolume)  must be positive")
     @Min(value = 1, message = "number(engineVolume)  must be >= 1")
     private Double engineVolume;
 
-//    @Past(message = "Date of issue value must be in the future or past")
     @NotNull(message = "Car dateOfIssue must not be null")
     private Timestamp dateOfIssue;
 
@@ -29,7 +25,6 @@ public class CarCreateRequest {
     private Integer numberOfSeats;
 
     @NotNull(message = "Car costPerDay must not be null")
-//    @Positive(message = "number(costPerDay)  must be positive")
     @Min(value = 10, message = "number(costPerDay)  must be >= 10")
     private Double costPerDay;
 

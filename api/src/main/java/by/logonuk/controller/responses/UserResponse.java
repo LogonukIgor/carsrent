@@ -4,13 +4,11 @@ import by.logonuk.domain.Deal;
 import by.logonuk.domain.DrivingLicence;
 import by.logonuk.domain.Role;
 import by.logonuk.domain.embed.user.Credentials;
-import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
-@ApiModel(description = "user response")
 public class UserResponse {
 
     private Long id;
