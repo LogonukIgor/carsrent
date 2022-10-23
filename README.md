@@ -1,5 +1,8 @@
 # CarsRentApp
 ___
+#### This RestAPI is a service in a bundle database for your car rental business. Database:
+<img src="db.png">
+
 ### To work correctly, follow these steps:
 
 #### 1) create the ***mail.properties*** file in the ***resources*** package (api module);
