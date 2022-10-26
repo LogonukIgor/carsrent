@@ -1,6 +1,6 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.embed.TechnicalInfo;
+import by.logonuk.domain.attachments.TechnicalInfo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

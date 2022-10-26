@@ -2,7 +2,7 @@ package by.logonuk.service;
 
 import by.logonuk.domain.Role;
 import by.logonuk.domain.User;
-import by.logonuk.domain.embed.TechnicalInfo;
+import by.logonuk.domain.attachments.TechnicalInfo;
 import by.logonuk.domain.enums.SystemRoles;
 import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.RoleRepository;

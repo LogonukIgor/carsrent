@@ -5,7 +5,7 @@ import by.logonuk.domain.Car;
 import by.logonuk.domain.CarManufacture;
 import by.logonuk.domain.Classification;
 import by.logonuk.domain.Model;
-import by.logonuk.domain.embed.TechnicalInfo;
+import by.logonuk.domain.attachments.TechnicalInfo;
 import by.logonuk.domain.enums.ClassificationLetter;
 import by.logonuk.domain.enums.Transmissions;
 import by.logonuk.exception.CustomIllegalArgumentException;

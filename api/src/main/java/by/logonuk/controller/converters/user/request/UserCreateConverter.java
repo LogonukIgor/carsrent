@@ -2,7 +2,8 @@ package by.logonuk.controller.converters.user.request;
 
 import by.logonuk.controller.requests.UserCreateRequest;
 import by.logonuk.domain.User;
-import by.logonuk.domain.embed.TechnicalInfo;
+import by.logonuk.domain.attachments.TechnicalInfo;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -10,6 +11,10 @@ import java.util.Date;
 
 @Component
 public class UserCreateConverter extends UserBaseConverterRequest<UserCreateRequest, User> {
+
+    public UserCreateConverter(PasswordEncoder passwordEncoder) {
+        super(passwordEncoder);
+    }
 
     @Override
     public User convert(UserCreateRequest source) {

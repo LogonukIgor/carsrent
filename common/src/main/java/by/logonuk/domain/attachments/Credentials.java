@@ -1,4 +1,4 @@
-package by.logonuk.domain.embed.user;
+package by.logonuk.domain.attachments;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

@@ -30,4 +30,15 @@ public class DateValidator implements CustomValidator {
             throw new DateValidationException("Date of returning must be in the future (at least 1 day)");
         }
     }
+
+    @Override
+    public void validLicenceDate(Timestamp dateOfIssue, Timestamp validUntil) {
+        Timestamp now = getReceivingTimestamp();
+        if(dateOfIssue.after(now)){
+            throw new DateValidationException("Date of issue must be in the past");
+        }
+        if(!validUntil.after(now)) {
+            throw new DateValidationException("Date (valid until) must be in the future");
+        }
+    }
 }

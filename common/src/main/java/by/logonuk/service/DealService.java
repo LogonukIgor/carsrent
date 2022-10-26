@@ -3,7 +3,7 @@ package by.logonuk.service;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.Deal;
 import by.logonuk.domain.User;
-import by.logonuk.domain.embed.TechnicalInfo;
+import by.logonuk.domain.attachments.TechnicalInfo;
 import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.CarRepository;
 import by.logonuk.repository.DealRepository;

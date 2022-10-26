@@ -2,7 +2,7 @@ package by.logonuk.controller.converters.deal.request;
 
 import by.logonuk.controller.requests.DealCreateRequest;
 import by.logonuk.domain.Deal;
-import by.logonuk.domain.embed.TechnicalInfo;
+import by.logonuk.domain.attachments.TechnicalInfo;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;

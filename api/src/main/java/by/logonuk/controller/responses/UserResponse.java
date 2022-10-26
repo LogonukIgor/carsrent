@@ -3,7 +3,7 @@ package by.logonuk.controller.responses;
 import by.logonuk.domain.Deal;
 import by.logonuk.domain.DrivingLicence;
 import by.logonuk.domain.Role;
-import by.logonuk.domain.embed.user.Credentials;
+import by.logonuk.domain.attachments.Credentials;
 import lombok.Data;
 
 import java.util.Set;

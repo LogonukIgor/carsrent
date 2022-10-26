@@ -1,4 +1,4 @@
-package by.logonuk.domain.embed;
+package by.logonuk.domain.attachments;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

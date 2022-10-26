@@ -1,5 +1,6 @@
 package by.logonuk.exceptionhandle;
 
+import by.logonuk.exception.CreateLicenceForUserException;
 import by.logonuk.exception.CustomIllegalArgumentException;
 import by.logonuk.exception.DateValidationException;
 import by.logonuk.exception.NoSuchEntityException;
@@ -150,6 +151,20 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(DateValidationException.class)
     public ResponseEntity<Object> handleCustomIllegalArgumentException(DateValidationException e) {
+
+        ErrorContainer error = ErrorContainer
+                .builder()
+                .exceptionId(UUIDGenerator.generateUUID())
+                .errorCode(8)
+                .errorMessage(e.toString())
+                .errorClass(e.getClass().toString())
+                .build();
+
+        return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CreateLicenceForUserException.class)
+    public ResponseEntity<Object> handleCreateLicenceForUserException(CreateLicenceForUserException e) {
 
         ErrorContainer error = ErrorContainer
                 .builder()

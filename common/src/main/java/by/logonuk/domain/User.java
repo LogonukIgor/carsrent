@@ -1,7 +1,7 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.embed.TechnicalInfo;
-import by.logonuk.domain.embed.user.Credentials;
+import by.logonuk.domain.attachments.TechnicalInfo;
+import by.logonuk.domain.attachments.Credentials;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -24,7 +24,6 @@ import java.util.Set;
 
 @Data
 @Entity
-//@EqualsAndHashCode(exclude = "roles")
 @EqualsAndHashCode(exclude = {
         "roles", "drivingLicence", "deal"
 })

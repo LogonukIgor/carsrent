@@ -1,6 +1,6 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.embed.TechnicalInfo;
+import by.logonuk.domain.attachments.TechnicalInfo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -16,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -28,15 +28,17 @@ public class DrivingLicence {
     private Long id;
 
     @Column(name = "date_of_issue")
-    private Date dateOfIssue;
+    private Timestamp dateOfIssue;
 
     @Column(name = "valid_until")
-    private Date validUntil;
+    private Timestamp validUntil;
 
     @Column(name = "category_b")
+    @JsonIgnore
     private Boolean categoryB;
 
     @Column(name = "serial_number")
+    @JsonIgnore
     private String serialNumber;
 
     @JsonIgnore
