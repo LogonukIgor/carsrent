@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface CarManufactureRepository extends JpaRepository<CarManufacture, Integer> {
 
-    Optional<CarManufacture> findByCountryOfOrigin(String countryOfOrigin);
+    Optional<CarManufacture> findByCountryOfOriginAndBrand(String countryOfOrigin, String brand);
 }

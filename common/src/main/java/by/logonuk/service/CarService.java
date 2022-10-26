@@ -68,7 +68,7 @@ public class CarService {
 
     @Transactional
     public CarManufacture carManufactureValid(CarManufacture carManufacture){
-        Optional<CarManufacture> searchCarManufacture = carManufactureRepository.findByCountryOfOrigin(carManufacture.getCountryOfOrigin());
+        Optional<CarManufacture> searchCarManufacture = carManufactureRepository.findByCountryOfOriginAndBrand(carManufacture.getCountryOfOrigin(), carManufacture.getBrand());
         if(searchCarManufacture.isPresent()){
             return searchCarManufacture.get();
         }

@@ -64,7 +64,7 @@ public class Car {
     })
     private TechnicalInfo technicalInfo;
 
-    @OneToOne(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(mappedBy = "car", cascade = CascadeType.DETACH, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonBackReference
     @JsonIgnoreProperties(value = {"car", "user"})
     private Deal deal;

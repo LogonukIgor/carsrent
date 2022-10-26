@@ -10,7 +10,6 @@ public class DealDefaultConverterResponse extends DealBaseConverterResponse<Deal
     @Override
     public DealResponse convert(Deal source) {
         DealResponse dealResponse = new DealResponse();
-        dealResponse.setDealCar(source.getCar());
         return doConvert(dealResponse, source);
     }
 }

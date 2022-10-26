@@ -4,7 +4,6 @@ import by.logonuk.controller.responses.UserResponse;
 import by.logonuk.domain.User;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class UserDefaultConverterResponse extends UserBaseConverterResponse<User, UserResponse> {
 

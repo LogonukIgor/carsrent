@@ -68,12 +68,12 @@ public class User {
     @Column(name = "is_mail_activated")
     private Boolean isMailActivated;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.DETACH, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     @JsonIgnoreProperties("user")
     private Deal deal;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.DETACH, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     private DrivingLicence drivingLicence;
 

@@ -46,7 +46,7 @@ public class CarCreateRequest {
 
     @NotNull(message = "Car countryOfOrigin must not be null")
     @Size(min = 2, max = 20, message = "Country of origin size must be between 2 and 20")
-    @Pattern(regexp = "^[A-Z][a-z]*", message = "Country of origin must start with a capital letter and contain only letters")
+    @Pattern(regexp = "^[a-zA-Z, ]*", message = "Country of origin must start with a capital letter and contain only letters")
     private String countryOfOrigin;
 
     @NotNull(message = "Car airConditioner must not be null")

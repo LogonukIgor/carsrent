@@ -1,7 +1,5 @@
 package by.logonuk.controller.responses;
 
-import by.logonuk.domain.Deal;
-import by.logonuk.domain.DrivingLicence;
 import by.logonuk.domain.Role;
 import by.logonuk.domain.attachments.Credentials;
 import lombok.Data;
@@ -21,7 +19,7 @@ public class UserResponse {
 
     private Set<Role> roles;
 
-    private DrivingLicence drivingLicence;
+    private DrivingLicenceResponse drivingLicence;
 
-    private Deal deal;
+    private DealResponse deal;
 }

@@ -1,6 +1,6 @@
 package by.logonuk.controller.converters.licence.response;
 
-import by.logonuk.controller.requests.DrivingLicenceResponse;
+import by.logonuk.controller.responses.DrivingLicenceResponse;
 import by.logonuk.domain.DrivingLicence;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,6 @@ public class LicenceDefaultConverterResponse extends LicenceBaseConverterRespons
         DrivingLicenceResponse drivingLicenceResponse = new DrivingLicenceResponse();
 
         drivingLicenceResponse.setId(source.getId());
-        drivingLicenceResponse.setCategoryB(source.getCategoryB());
         drivingLicenceResponse.setUserId(source.getUser().getId());
         drivingLicenceResponse.setDateOfIssue(source.getDateOfIssue());
         drivingLicenceResponse.setValidUntil(source.getValidUntil());

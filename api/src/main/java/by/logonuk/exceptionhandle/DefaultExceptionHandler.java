@@ -90,7 +90,7 @@ public class DefaultExceptionHandler {
                 .builder()
                 .exceptionId(UUIDGenerator.generateUUID())
                 .errorCode(1)
-                .errorMessage("General error")
+                .errorMessage("General error"+ e.getMessage())
                 .errorClass(e.getClass().toString())
                 .build();
 

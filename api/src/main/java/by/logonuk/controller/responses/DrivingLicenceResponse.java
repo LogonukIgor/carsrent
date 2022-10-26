@@ -1,4 +1,4 @@
-package by.logonuk.controller.requests;
+package by.logonuk.controller.responses;
 
 import lombok.Data;
 
@@ -12,8 +12,6 @@ public class DrivingLicenceResponse{
     private Timestamp dateOfIssue;
 
     private Timestamp validUntil;
-
-    private Boolean categoryB;
 
     private String serialNumber;
 

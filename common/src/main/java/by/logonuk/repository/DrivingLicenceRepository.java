@@ -11,4 +11,6 @@ public interface DrivingLicenceRepository extends JpaRepository<DrivingLicence, 
 
     @Query(value = "select * from cars_rent.driving_licence where user_id = :user_id", nativeQuery = true)
     Optional<DrivingLicence> customFindByUserId(@Param("user_id") Long userId);
+
+    Optional<DrivingLicence> findByIdAndTechnicalInfoIsDeleted(Long licenceId, Boolean isDeleted);
 }

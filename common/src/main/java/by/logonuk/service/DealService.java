@@ -34,11 +34,14 @@ public class DealService {
         Long carId = Long.parseLong(carIdRequest);
 
         Optional<User> searchUser = userRepository.findByIdAndTechnicalInfoIsDeleted(userId, false);
-        Optional<Car> searchCar = carRepository.findByIdAndTechnicalInfoIsDeleted(carId, false);
+        Optional<Car> searchCar = carRepository.findByIdAndTechnicalInfoIsDeletedAndIsInStock(carId, false, true);
 
         User user = searchUser.orElseThrow(() -> new NoSuchEntityException("User with id = " + userId + " does not exist"));
         Car car = searchCar.orElseThrow(() -> new NoSuchEntityException("Car with id = " + carId + " does not exist"));
 
+        if(user.getDrivingLicence()==null){
+            throw new NoSuchEntityException("User with id = " + carId + " does not have a licence");
+        }
         Map<String, Object> entityMap = new HashMap<>(2);
         entityMap.put("user", user);
         entityMap.put("car", car);
@@ -48,6 +51,7 @@ public class DealService {
     @Transactional
     public Deal createDeal(User user, Car car, Deal deal) {
         deal.setPrice(costCalculation(deal, car));
+        car.setIsInStock(false);
         deal.setCar(car);
         deal.setUser(user);
         dealRepository.save(deal);
@@ -67,6 +71,7 @@ public class DealService {
         technicalInfo.setModificationDate(new Timestamp(new Date().getTime()));
         deal.setTechnicalInfo(technicalInfo);
 
+        car.setIsInStock(false);
         deal.setUser(user);
         deal.setCar(car);
 
@@ -74,5 +79,12 @@ public class DealService {
 
         dealRepository.save(deal);
         return deal;
+    }
+
+    public void deleteDeal(Deal deal) {
+        Car car = deal.getCar();
+        car.setIsInStock(true);
+        dealRepository.delete(deal);
+        carRepository.save(car);
     }
 }

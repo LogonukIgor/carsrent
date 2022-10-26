@@ -3,6 +3,7 @@ package by.logonuk.controller;
 import by.logonuk.controller.requests.UserCreateRequest;
 import by.logonuk.controller.requests.UserUpdateRequest;
 import by.logonuk.controller.responses.UserResponse;
+import by.logonuk.controller.responses.ResponseMapper;
 import by.logonuk.domain.User;
 import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.UserRepository;
@@ -12,7 +13,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +39,8 @@ public class UserController {
 
     private final ConversionService converter;
 
+    private final ResponseMapper userResponseMapper;
+
     private static final String RESULT = "result";
 
     private static final String USER_NOT_FOUND = "User with this %s = %d does not exist";
@@ -48,12 +50,12 @@ public class UserController {
         long userId = Long.parseLong(id);
         Optional<User> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(userId, false);
         User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", userId)));
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(user)), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false).stream().map(i -> converter.convert(i, UserResponse.class)).collect(Collectors.toList())), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false).stream().map(i -> userResponseMapper.mapUserResponse(i)).collect(Collectors.toList())), HttpStatus.OK);
     }
 
     @PostMapping
@@ -61,7 +63,8 @@ public class UserController {
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         User user = converter.convert(userCreateRequest, User.class);
         User savedUser = userService.createUserWithAnonymousRole(user);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(savedUser, UserResponse.class)), HttpStatus.CREATED);
+
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(savedUser)), HttpStatus.CREATED);
     }
 
     @GetMapping("/activation")
@@ -71,15 +74,17 @@ public class UserController {
         User user = searchResult.orElseThrow(() -> new NoSuchEntityException("User with this activation code = " + code + " does not exist activation code"));
         userService.updateUserToUserRole(user);
         User savedUser = userService.updateUserToUserRole(user);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(savedUser, UserResponse.class)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(savedUser)), HttpStatus.OK);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        Optional<User> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(Long.parseLong(userUpdateRequest.getUserId()), false);
+        searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", Long.parseLong(userUpdateRequest.getUserId()))));
         User user = converter.convert(userUpdateRequest, User.class);
         User updatedUser = userService.updateUser(user);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedUser, UserResponse.class)), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(updatedUser)), HttpStatus.CREATED);
     }
 
     @PatchMapping("/delete/{id}")
@@ -89,6 +94,6 @@ public class UserController {
         User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", userId)));
         user.getTechnicalInfo().setIsDeleted(true);
         repository.save(user);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(user, UserResponse.class)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(user)), HttpStatus.OK);
     }
 }

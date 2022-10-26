@@ -3,7 +3,7 @@ package by.logonuk.controller;
 import by.logonuk.controller.requests.DealCreateRequest;
 import by.logonuk.controller.requests.DealUpdateRequest;
 import by.logonuk.controller.responses.DealResponse;
-import by.logonuk.controller.responses.UserResponse;
+import by.logonuk.controller.responses.ResponseMapper;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.Deal;
 import by.logonuk.domain.User;
@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,6 +42,8 @@ public class DealController {
 
     private final ConversionService converter;
 
+    private final ResponseMapper responseMapper;
+
     private final CustomValidator validator;
 
     private static final String RESULT = "result";
@@ -54,12 +55,12 @@ public class DealController {
         long dealId = Long.parseLong(id);
         Optional<Deal> searchDeal = repository.findByIdAndTechnicalInfoIsDeleted(dealId, false);
         Deal deal = searchDeal.orElseThrow(() -> new NoSuchEntityException(DEAL_NOT_FOUND.formatted("id", dealId)));
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(deal, DealResponse.class)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, responseMapper.mapDealResponse(deal)), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<Object> findAllDeals() {
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false).stream().map(i -> converter.convert(i, DealResponse.class)).collect(Collectors.toList())), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false).stream().map(i -> responseMapper.mapDealResponse(i)).collect(Collectors.toList())), HttpStatus.OK);
     }
 
     @PostMapping
@@ -68,7 +69,7 @@ public class DealController {
         Deal deal = converter.convert(dealCreateRequest, Deal.class);
         validator.validDealDate(deal.getReceivingDate(), deal.getReturnDate());
         Deal savedDeal = dealService.createDeal((User) entityMap.get("user"), (Car) entityMap.get("car"), deal);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(savedDeal, DealResponse.class)), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, responseMapper.mapDealResponse(savedDeal)), HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -78,16 +79,16 @@ public class DealController {
         Deal deal = converter.convert(dealUpdateRequest, Deal.class);
         validator.validDealDate(deal.getReceivingDate(), deal.getReturnDate());
         Deal updateDeal = dealService.updateDeal((User) entityMap.get("user"), (Car) entityMap.get("car"), deal);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updateDeal, DealResponse.class)), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, responseMapper.mapDealResponse(updateDeal)), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/delete/{id}")
-    public ResponseEntity<Object> softDealDelete(@PathVariable String id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteDeal(@PathVariable String id) {
         long dealId = Long.parseLong(id);
         Optional<Deal> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(dealId, false);
         Deal deal = searchUser.orElseThrow(() -> new NoSuchEntityException(DEAL_NOT_FOUND.formatted("id", dealId)));
         deal.getTechnicalInfo().setIsDeleted(true);
-        repository.save(deal);
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(deal, UserResponse.class)), HttpStatus.OK);
+        dealService.deleteDeal(deal);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, responseMapper.mapDealResponse(deal)), HttpStatus.OK);
     }
 }

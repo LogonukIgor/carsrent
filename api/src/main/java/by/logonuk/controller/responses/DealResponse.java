@@ -1,6 +1,5 @@
 package by.logonuk.controller.responses;
 
-import by.logonuk.domain.Car;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -16,5 +15,5 @@ public class DealResponse {
 
     private Double price;
 
-    private Car dealCar;
+    private CarResponse car;
 }
