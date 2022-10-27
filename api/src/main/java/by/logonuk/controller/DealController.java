@@ -74,7 +74,7 @@ public class DealController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Object> updateCar(@Valid @RequestBody DealUpdateRequest dealUpdateRequest) {
+    public ResponseEntity<Object> updateDeal(@Valid @RequestBody DealUpdateRequest dealUpdateRequest) {
         Map<String, Object> entityMap = dealService.validateDeal(dealUpdateRequest.getUserId(), dealUpdateRequest.getCarId());
         Deal deal = converter.convert(dealUpdateRequest, Deal.class);
         validator.validDealDate(deal.getReceivingDate(), deal.getReturnDate());

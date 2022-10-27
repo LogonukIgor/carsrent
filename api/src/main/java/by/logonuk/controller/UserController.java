@@ -2,7 +2,6 @@ package by.logonuk.controller;
 
 import by.logonuk.controller.requests.UserCreateRequest;
 import by.logonuk.controller.requests.UserUpdateRequest;
-import by.logonuk.controller.responses.UserResponse;
 import by.logonuk.controller.responses.ResponseMapper;
 import by.logonuk.domain.User;
 import by.logonuk.exception.NoSuchEntityException;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,7 +53,10 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAllByTechnicalInfoIsDeleted(false).stream().map(i -> userResponseMapper.mapUserResponse(i)).collect(Collectors.toList())), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT,
+                repository.findAllByTechnicalInfoIsDeleted(false).stream()
+                        .map(userResponseMapper::mapUserResponse)
+                        .toList()), HttpStatus.OK);
     }
 
     @PostMapping
