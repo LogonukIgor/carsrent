@@ -16,29 +16,29 @@ public class LicenceAspect {
     private static final String METHOD_FINISHED = "Method %s finished";
 
     @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.createLicence(..))")
-    public void aroundCreateLicencePointcut() {
+    public void afterCreateLicencePointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.updateLicence(..))")
-    public void aroundUpdateLicencePointcut() {
+    public void afterUpdateLicencePointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.softLicenceDelete(..))")
-    public void aroundDeleteLicencePointcut() {
+    public void afterDeleteLicencePointcut() {
     }
 
-    @AfterReturning(pointcut = "aroundCreateLicencePointcut()")
-    public void logAroundCreateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterCreateLicencePointcut()")
+    public void logAfterCreateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundUpdateLicencePointcut()")
-    public void logAroundUpdateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterUpdateLicencePointcut()")
+    public void logAfterUpdateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundDeleteLicencePointcut()")
-    public void logAroundMethods(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterDeleteLicencePointcut()")
+    public void logAfterMethods(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 }

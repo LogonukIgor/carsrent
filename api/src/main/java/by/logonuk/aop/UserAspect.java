@@ -16,29 +16,29 @@ public class UserAspect {
     private static final String METHOD_FINISHED = "Method %s finished";
 
     @Pointcut("execution(public * by.logonuk.controller.UserController.createUser(..))")
-    public void aroundCreateUserPointcut() {
+    public void afterCreateUserPointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.UserController.updateUser(..))")
-    public void aroundUpdateUserPointcut() {
+    public void afterUpdateUserPointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.UserController.softUserDelete(..))")
-    public void aroundDeleteUserPointcut() {
+    public void afterDeleteUserPointcut() {
     }
 
-    @AfterReturning(pointcut = "aroundCreateUserPointcut()")
-    public void logAroundCreateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterCreateUserPointcut()")
+    public void logAfterCreateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundUpdateUserPointcut()")
-    public void logAroundUpdateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterUpdateUserPointcut()")
+    public void logAfterUpdateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundDeleteUserPointcut()")
-    public void logAroundMethods(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterDeleteUserPointcut()")
+    public void logAfterMethods(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 }

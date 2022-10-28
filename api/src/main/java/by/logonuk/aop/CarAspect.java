@@ -16,29 +16,29 @@ public class CarAspect {
     private static final String METHOD_FINISHED = "Method %s finished";
 
     @Pointcut("execution(public * by.logonuk.controller.CarController.createCar(..))")
-    public void aroundCreateCarPointcut() {
+    public void afterCreateCarPointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.CarController.updateCar(..))")
-    public void aroundUpdateCarPointcut() {
+    public void afterUpdateCarPointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.CarController.softCarDelete(..))")
-    public void aroundDeleteCarPointcut() {
+    public void afterDeleteCarPointcut() {
     }
 
-    @AfterReturning(pointcut = "aroundCreateCarPointcut()")
-    public void logAroundCreateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterCreateCarPointcut()")
+    public void logAfterCreateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundUpdateCarPointcut()")
-    public void logAroundUpdateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterUpdateCarPointcut()")
+    public void logAfterUpdateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundDeleteCarPointcut()")
-    public void logAroundMethods(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterDeleteCarPointcut()")
+    public void logAfterMethods(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 }

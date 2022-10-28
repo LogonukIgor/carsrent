@@ -16,29 +16,29 @@ public class DealAspect {
     private static final String METHOD_FINISHED = "Method %s finished";
 
     @Pointcut("execution(public * by.logonuk.controller.DealController.createDeal(..))")
-    public void aroundCreateDealPointcut() {
+    public void afterCreateDealPointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.DealController.updateDeal(..))")
-    public void aroundUpdateDealPointcut() {
+    public void afterUpdateDealPointcut() {
     }
 
     @Pointcut("execution(public * by.logonuk.controller.DealController.deleteDeal(..))")
-    public void aroundDeleteDealPointcut() {
+    public void afterDeleteDealPointcut() {
     }
 
-    @AfterReturning(pointcut = "aroundCreateDealPointcut()")
-    public void logAroundCreateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterCreateDealPointcut()")
+    public void logAfterCreateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundUpdateDealPointcut()")
-    public void logAroundUpdateMethod(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterUpdateDealPointcut()")
+    public void logAfterUpdateMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 
-    @AfterReturning(pointcut = "aroundDeleteDealPointcut()")
-    public void logAroundMethods(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterDeleteDealPointcut()")
+    public void logAfterMethods(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 }
