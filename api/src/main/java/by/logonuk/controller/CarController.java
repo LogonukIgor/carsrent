@@ -87,4 +87,9 @@ public class CarController {
         repository.save(car);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(car, CarResponse.class)), HttpStatus.OK);
     }
+
+    @GetMapping("/function")
+    public ResponseEntity<Object> getNumberOfUsers(){
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.carsInStock()), HttpStatus.OK);
+    }
 }

@@ -97,4 +97,9 @@ public class UserController {
         repository.save(user);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(user)), HttpStatus.OK);
     }
+
+    @GetMapping("/function")
+    public ResponseEntity<Object> getNumberOfUsers(){
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.numberOfUsers(false)), HttpStatus.OK);
+    }
 }

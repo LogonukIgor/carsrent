@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -34,4 +35,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "select * from cars_rent.users as u inner join cars_rent.deal as d on  d.user_id = u.id where d.id = :deal_id, d.is_deleted = :is_deleted", nativeQuery = true)
     User findByDeal(@Param("deal_id") Long dealId, @Param("is_deleted") Boolean isDeleted);
+
+    @Query(value = "select cars_rent.get_users_stats_number_of_users(:is_deleted)", nativeQuery = true)
+    Map<String, Integer> numberOfUsers(@Param("is_deleted") Boolean isDeleted);
 }

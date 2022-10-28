@@ -91,4 +91,9 @@ public class DealController {
         dealService.deleteDeal(deal);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, responseMapper.mapDealResponse(deal)), HttpStatus.OK);
     }
+
+    @GetMapping("/function")
+    public ResponseEntity<Object> getNumberOfUsers(){
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.CountOfDeals()), HttpStatus.OK);
+    }
 }
