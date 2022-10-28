@@ -15,30 +15,12 @@ public class UserAspect {
 
     private static final String METHOD_FINISHED = "Method %s finished";
 
-    @Pointcut("execution(public * by.logonuk.controller.UserController.createUser(..))")
-    public void afterCreateUserPointcut() {
+    @Pointcut("execution(public * by.logonuk.controller.UserController.*(..))")
+    public void afterUserPointcut() {
     }
 
-    @Pointcut("execution(public * by.logonuk.controller.UserController.updateUser(..))")
-    public void afterUpdateUserPointcut() {
-    }
-
-    @Pointcut("execution(public * by.logonuk.controller.UserController.softUserDelete(..))")
-    public void afterDeleteUserPointcut() {
-    }
-
-    @AfterReturning(pointcut = "afterCreateUserPointcut()")
-    public void logAfterCreateMethod(JoinPoint joinPoint) {
-        log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
-    }
-
-    @AfterReturning(pointcut = "afterUpdateUserPointcut()")
-    public void logAfterUpdateMethod(JoinPoint joinPoint) {
-        log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
-    }
-
-    @AfterReturning(pointcut = "afterDeleteUserPointcut()")
-    public void logAfterMethods(JoinPoint joinPoint) {
+    @AfterReturning(pointcut = "afterUserPointcut()")
+    public void logAfterUserMethod(JoinPoint joinPoint) {
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
     }
 }

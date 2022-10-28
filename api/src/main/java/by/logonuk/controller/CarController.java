@@ -79,6 +79,7 @@ public class CarController {
     }
 
     @PatchMapping("/delete/{id}")
+    @Transactional
     public ResponseEntity<Object> softCarDelete(@PathVariable String id) {
         long carId = Long.parseLong(id);
         Optional<Car> searchCar = repository.findByIdAndTechnicalInfoIsDeleted(carId, false);
