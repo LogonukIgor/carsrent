@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -27,6 +28,7 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(exclude = "users")
 @Table(name = "roles")
+@Cacheable("roles_and_classification")
 public class Role {
 
     @Id

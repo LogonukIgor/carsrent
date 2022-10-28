@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -25,6 +26,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "classification")
+@Cacheable("roles_and_classification")
 public class Classification {
 
     @Id
