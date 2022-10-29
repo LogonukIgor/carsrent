@@ -1,8 +1,8 @@
 package by.logonuk.aop;
 
 import org.apache.log4j.Logger;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
@@ -15,12 +15,16 @@ public class LicenceAspect {
 
     private static final String METHOD_FINISHED = "Method %s finished";
 
+    private static final String METHOD_START = "Method %s start";
+
     @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.*(..))")
     public void afterLicencePointcut() {
     }
-
-    @AfterReturning(pointcut = "afterLicencePointcut()")
-    public void logAfterLicenceMethod(JoinPoint joinPoint) {
+    @Around("afterLicencePointcut()")
+    public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info(String.format(METHOD_START, joinPoint.getSignature().getName()));
+        Object proceed = joinPoint.proceed();
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
+        return proceed;
     }
 }
