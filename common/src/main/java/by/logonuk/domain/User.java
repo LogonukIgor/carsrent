@@ -1,14 +1,19 @@
 package by.logonuk.domain;
 
-import by.logonuk.domain.attachments.TechnicalInfo;
 import by.logonuk.domain.attachments.Credentials;
+import by.logonuk.domain.attachments.TechnicalInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -31,6 +36,8 @@ import java.util.Set;
         "roles", "drivingLicence", "deal"
 })
 @Table(name = "users")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
 public class User {
 
     @Id

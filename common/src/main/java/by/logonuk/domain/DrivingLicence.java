@@ -4,9 +4,12 @@ import by.logonuk.domain.attachments.TechnicalInfo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,6 +24,8 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "driving_licence")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
 public class DrivingLicence {
 
     @Id

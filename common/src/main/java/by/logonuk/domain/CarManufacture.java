@@ -5,9 +5,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -22,6 +25,8 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "cars_manufacturer")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
 public class CarManufacture {
 
     @Id
