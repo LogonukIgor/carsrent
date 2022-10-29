@@ -8,6 +8,7 @@ import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.CarRepository;
 import by.logonuk.repository.DealRepository;
 import by.logonuk.repository.UserRepository;
+import by.logonuk.service.mailsender.MailSenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,8 @@ public class DealService {
 
     private final DealRepository dealRepository;
 
+    private final MailSenderService mailSender;
+
     @Transactional
     public Map<String, Object> validateDeal(String userIdRequest, String carIdRequest) {
         Long userId = Long.parseLong(userIdRequest);
@@ -40,7 +43,7 @@ public class DealService {
         Car car = searchCar.orElseThrow(() -> new NoSuchEntityException("Car with id = " + carId + " does not exist"));
 
         if(user.getDrivingLicence()==null){
-            throw new NoSuchEntityException("User with id = " + carId + " does not have a licence");
+            throw new NoSuchEntityException("User with id = " + userId + " does not have a licence");
         }
         Map<String, Object> entityMap = new HashMap<>(2);
         entityMap.put("user", user);
@@ -55,6 +58,7 @@ public class DealService {
         deal.setCar(car);
         deal.setUser(user);
         dealRepository.save(deal);
+        mailSender.sendDealDetailsToUser(deal);
         return deal;
     }
 
@@ -63,6 +67,7 @@ public class DealService {
         return (double) Math.round(dateDifferenceDay * car.getCostPerDay());
     }
 
+    @Transactional
     public Deal updateDeal(User user, Car car, Deal deal) {
         Optional<Deal> searchDeal = dealRepository.findByIdAndTechnicalInfoIsDeleted(deal.getId(), false);
         Deal searchedDeal = searchDeal.orElseThrow(() -> new NoSuchEntityException("User with id = " + deal.getId() + " does not exist"));
@@ -81,10 +86,11 @@ public class DealService {
         return deal;
     }
 
+    @Transactional
     public void deleteDeal(Deal deal) {
         Car car = deal.getCar();
         car.setIsInStock(true);
-        dealRepository.delete(deal);
         carRepository.save(car);
+        dealRepository.delete(deal);
     }
 }

@@ -13,3 +13,4 @@ ___
 - USER_NAME=gmail  
 - PASSWORD=password   
 - PROTOCOL=smtp/smtps
+- YOUR_HOST=localhost:8080

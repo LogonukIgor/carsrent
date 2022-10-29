@@ -15,7 +15,7 @@ public class ExceptionAspect {
 
     private static final String EXCEPTION = "Exception %s";
 
-    @Pointcut("execution(public * by.logonuk.exceptionhandle.DefaultExceptionHandler*(..))")
+    @Pointcut("execution(public * by.logonuk.exceptionhandle.DefaultExceptionHandler.*(..))")
     public void afterExceptionPointcut() {
     }
 

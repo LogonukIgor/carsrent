@@ -64,6 +64,7 @@ public class DealController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Object> createDeal(@Valid @RequestBody DealCreateRequest dealCreateRequest) {
         Map<String, Object> entityMap = dealService.validateDeal(dealCreateRequest.getUserId(), dealCreateRequest.getCarId());
         Deal deal = converter.convert(dealCreateRequest, Deal.class);
@@ -83,6 +84,7 @@ public class DealController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Transactional
     public ResponseEntity<Object> deleteDeal(@PathVariable String id) {
         long dealId = Long.parseLong(id);
         Optional<Deal> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(dealId, false);
