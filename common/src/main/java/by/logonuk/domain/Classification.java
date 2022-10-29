@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "classification")
-@Cacheable("roles_and_classification")
+@Cacheable(cacheNames = "classification", cacheManager = "cacheManagerClassification")
 public class Classification {
 
     @Id

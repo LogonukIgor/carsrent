@@ -28,7 +28,7 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(exclude = "users")
 @Table(name = "roles")
-@Cacheable("roles_and_classification")
+@Cacheable("roles")
 public class Role {
 
     @Id

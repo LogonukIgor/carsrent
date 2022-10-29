@@ -13,7 +13,6 @@ public interface ClassificationRepository extends JpaRepository<Classification, 
 
     Classification findByClassificationLetter(ClassificationLetter classificationLetter);
 
-    @Cacheable("roles_and_classification")
-    @Query(value = "select c from Classification c")
-    List<Classification> findAllCustom();
+    @Cacheable(cacheNames = "classification", cacheManager = "cacheManagerClassification")
+    List<Classification> findAll();
 }
