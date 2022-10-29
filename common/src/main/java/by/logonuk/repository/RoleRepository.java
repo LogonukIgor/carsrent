@@ -16,5 +16,6 @@ public interface RoleRepository extends JpaRepository<Role, Long>{
     @Cacheable("roles")
     List<Role> findAll();
 
+    @Cacheable("roles")
     Role findByRoleName(SystemRoles systemRoles);
 }

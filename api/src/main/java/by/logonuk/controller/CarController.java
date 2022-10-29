@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cars")
+@Transactional
 public class CarController {
 
     public final CarRepository repository;
@@ -60,7 +61,6 @@ public class CarController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Object> createCar(@Valid @RequestBody CarCreateRequest carCreateRequest) {
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
@@ -71,7 +71,6 @@ public class CarController {
     }
 
     @PutMapping
-    @Transactional
     public ResponseEntity<Object> updateCar(@Valid @RequestBody CarUpdateRequest carUpdateRequest) {
         CarUpdateMapper carCreateMapping = new CarUpdateMapper(repository, carUpdateRequest, new Timestamp((new Date().getTime())));
         Car updatedCar = carService.updateCar(carCreateMapping.carMapping(), carCreateMapping.modelMapping(), carCreateMapping.classificationMapping(), carCreateMapping.carManufactureMapping());
@@ -79,7 +78,6 @@ public class CarController {
     }
 
     @PatchMapping("/delete/{id}")
-    @Transactional
     public ResponseEntity<Object> softCarDelete(@PathVariable String id) {
         long carId = Long.parseLong(id);
         Optional<Car> searchCar = repository.findByIdAndTechnicalInfoIsDeleted(carId, false);

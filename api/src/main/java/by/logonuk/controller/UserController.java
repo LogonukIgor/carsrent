@@ -29,6 +29,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@Transactional
 public class UserController {
 
     private final UserRepository repository;
@@ -60,7 +61,6 @@ public class UserController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         User user = converter.convert(userCreateRequest, User.class);
         User savedUser = userService.createUserWithAnonymousRole(user);
@@ -69,7 +69,6 @@ public class UserController {
     }
 
     @GetMapping("/activation")
-    @Transactional
     public ResponseEntity<Object> activationUserMail(@RequestParam("code") String code) {
         Optional<User> searchResult = repository.findByActivationCodeAndTechnicalInfoIsDeleted(code, false);
         User user = searchResult.orElseThrow(() -> new NoSuchEntityException("User with this activation code = " + code + " does not exist activation code"));
@@ -79,7 +78,6 @@ public class UserController {
     }
 
     @PutMapping
-    @Transactional
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         Optional<User> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(Long.parseLong(userUpdateRequest.getUserId()), false);
         searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", Long.parseLong(userUpdateRequest.getUserId()))));

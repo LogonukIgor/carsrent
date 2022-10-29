@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface ClassificationRepository extends JpaRepository<Classification, Integer> {
 
+    @Cacheable(cacheNames = "classification", cacheManager = "cacheManagerClassification")
     Classification findByClassificationLetter(ClassificationLetter classificationLetter);
 
     @Cacheable(cacheNames = "classification", cacheManager = "cacheManagerClassification")

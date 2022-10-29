@@ -2,7 +2,6 @@ package by.logonuk.controller;
 
 import by.logonuk.controller.requests.DealCreateRequest;
 import by.logonuk.controller.requests.DealUpdateRequest;
-import by.logonuk.controller.responses.DealResponse;
 import by.logonuk.controller.responses.ResponseMapper;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.Deal;
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/deals")
+@Transactional
 public class DealController {
 
     private final DealRepository repository;
@@ -64,7 +64,6 @@ public class DealController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Object> createDeal(@Valid @RequestBody DealCreateRequest dealCreateRequest) {
         Map<String, Object> entityMap = dealService.validateDeal(dealCreateRequest.getUserId(), dealCreateRequest.getCarId());
         Deal deal = converter.convert(dealCreateRequest, Deal.class);
@@ -74,7 +73,6 @@ public class DealController {
     }
 
     @PutMapping
-    @Transactional
     public ResponseEntity<Object> updateDeal(@Valid @RequestBody DealUpdateRequest dealUpdateRequest) {
         Map<String, Object> entityMap = dealService.validateDeal(dealUpdateRequest.getUserId(), dealUpdateRequest.getCarId());
         Deal deal = converter.convert(dealUpdateRequest, Deal.class);
@@ -84,7 +82,6 @@ public class DealController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @Transactional
     public ResponseEntity<Object> deleteDeal(@PathVariable String id) {
         long dealId = Long.parseLong(id);
         Optional<Deal> searchUser = repository.findByIdAndTechnicalInfoIsDeleted(dealId, false);
