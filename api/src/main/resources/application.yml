@@ -35,4 +35,4 @@ server:
 
 jwt:
   secret: sdfsdfwejfwiofjnoldivcow2371984
-  expiration: 60000
+  expiration: 3600000

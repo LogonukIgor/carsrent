@@ -2,12 +2,14 @@ package by.logonuk.controller;
 
 import by.logonuk.repository.LibraryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Collections;
 
@@ -20,15 +22,8 @@ public class LibraryController {
 
     private static final String RESULT = "result";
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> findById(@PathVariable String id) {
-        long libraryId = Long.parseLong(id);
-
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findById(libraryId)), HttpStatus.OK);
-    }
-
     @GetMapping
-    public ResponseEntity<Object> findAllFields() {
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAll()), HttpStatus.OK);
+    public ResponseEntity<Object> findAllFields(@ApiIgnore Pageable pageable) {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.findAll(pageable)), HttpStatus.OK);
     }
 }

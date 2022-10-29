@@ -1,6 +1,6 @@
 package by.logonuk.security;
 
-import by.logonuk.configuration.EncoderConfig;
+import by.logonuk.security.filter.AuthenticationTokenFilter;
 import by.logonuk.security.jwt.JwtTokenHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userProvider;
@@ -29,19 +30,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
 
+    private static final String USER = "USER";
+
+    private static final String ANONYMOUS = "ANONYMOUS";
+
+    private static final String MODERATOR = "MODERATOR";
+
+    private static final String ADMIN = "ADMIN";
+
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(userProvider)
                 .passwordEncoder(passwordEncoder);
     }
-
-//    @Bean
-//    public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception {
-//        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userDetailsService);
-//        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
-//        return authenticationTokenFilter;
-//    }
 
     @Bean
     @Override
@@ -60,35 +62,35 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                /*For swagger access only*/
                 .antMatchers("/v3/api-docs/**", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui/index").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/guest/**").permitAll()
-                .antMatchers("/registration/**").permitAll()
-                .antMatchers("/authentication/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/licence/**").permitAll()
-                .antMatchers("/rest/**").permitAll()
-                .antMatchers("/users/**").permitAll()
-                .antMatchers("/deals/**").permitAll()
-                .antMatchers("/roles/**").permitAll()
-                .antMatchers("/cars/**").permitAll()
-                .antMatchers("/library/**").permitAll()
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "MODERATOR")
+                .antMatchers("/**").permitAll()
+
+                .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(MODERATOR, ADMIN)
+                .antMatchers(HttpMethod.GET, "/users").hasAnyRole(USER, ANONYMOUS, MODERATOR, ADMIN)
+
+                .antMatchers(HttpMethod.GET, "/licence/all").hasAnyRole(MODERATOR, ADMIN)
+                .antMatchers("/licence").hasAnyRole(USER, MODERATOR, ADMIN)
+
+                .antMatchers(HttpMethod.GET, "/deals/**").hasAnyRole(MODERATOR, ADMIN)
+                .antMatchers("/deals").hasAnyRole(USER, MODERATOR, ADMIN)
+
+                .antMatchers(HttpMethod.POST, "/cars").hasAnyRole(MODERATOR, ADMIN)
+                .antMatchers(HttpMethod.PUT, "/cars").hasAnyRole(MODERATOR, ADMIN)
+                .antMatchers(HttpMethod.PATCH, "/cars").hasAnyRole(MODERATOR, ADMIN)
                 .anyRequest()
                 .authenticated();
 
-        // Custom JWT based authentication
-//        httpSecurity
-//                .addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity
+                .addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
     }
 
-    //For swagger access only
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring()
-//                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**");
-//    }
+    @Bean
+    public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception {
+        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userProvider);
+        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
+        return authenticationTokenFilter;
+    }
 }

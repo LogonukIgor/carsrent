@@ -5,6 +5,7 @@ import by.logonuk.exception.CustomIllegalArgumentException;
 import by.logonuk.exception.DateValidationException;
 import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.util.UUIDGenerator;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -90,7 +91,7 @@ public class DefaultExceptionHandler {
                 .builder()
                 .exceptionId(UUIDGenerator.generateUUID())
                 .errorCode(1)
-                .errorMessage("General error"+ e.getMessage())
+                .errorMessage("General error: "+ e.getMessage())
                 .errorClass(e.getClass().toString())
                 .build();
 
@@ -155,7 +156,7 @@ public class DefaultExceptionHandler {
         ErrorContainer error = ErrorContainer
                 .builder()
                 .exceptionId(UUIDGenerator.generateUUID())
-                .errorCode(8)
+                .errorCode(9)
                 .errorMessage(e.toString())
                 .errorClass(e.getClass().toString())
                 .build();
@@ -169,7 +170,7 @@ public class DefaultExceptionHandler {
         ErrorContainer error = ErrorContainer
                 .builder()
                 .exceptionId(UUIDGenerator.generateUUID())
-                .errorCode(8)
+                .errorCode(10)
                 .errorMessage(e.toString())
                 .errorClass(e.getClass().toString())
                 .build();
