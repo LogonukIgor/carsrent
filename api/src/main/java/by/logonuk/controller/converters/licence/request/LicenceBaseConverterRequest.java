@@ -1,6 +1,6 @@
 package by.logonuk.controller.converters.licence.request;
 
-import by.logonuk.controller.requests.DrivingLicenceCreateRequest;
+import by.logonuk.controller.requests.licence.DrivingLicenceCreateRequest;
 import by.logonuk.domain.DrivingLicence;
 import org.springframework.core.convert.converter.Converter;
 

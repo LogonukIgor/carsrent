@@ -1,12 +1,8 @@
 package by.logonuk.controller.converters.user.responce;
 
-import by.logonuk.controller.responses.DealResponse;
-import by.logonuk.controller.responses.DrivingLicenceResponse;
-import by.logonuk.controller.responses.UserResponse;
+import by.logonuk.controller.responses.user.UserResponse;
 import by.logonuk.domain.Role;
 import by.logonuk.domain.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.Set;

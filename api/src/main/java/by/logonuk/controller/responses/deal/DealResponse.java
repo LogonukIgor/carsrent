@@ -1,5 +1,6 @@
-package by.logonuk.controller.responses;
+package by.logonuk.controller.responses.deal;
 
+import by.logonuk.controller.responses.car.CarResponse;
 import lombok.Data;
 
 import java.sql.Timestamp;

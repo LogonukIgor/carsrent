@@ -1,6 +1,6 @@
 package by.logonuk.controller.converters.user.responce;
 
-import by.logonuk.controller.responses.UserResponse;
+import by.logonuk.controller.responses.user.UserResponse;
 import by.logonuk.domain.User;
 import org.springframework.stereotype.Component;
 

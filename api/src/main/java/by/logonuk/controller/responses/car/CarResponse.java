@@ -1,4 +1,4 @@
-package by.logonuk.controller.responses;
+package by.logonuk.controller.responses.car;
 
 import by.logonuk.domain.Library;
 import lombok.Data;

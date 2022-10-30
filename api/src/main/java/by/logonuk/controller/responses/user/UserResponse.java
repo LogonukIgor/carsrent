@@ -1,5 +1,7 @@
-package by.logonuk.controller.responses;
+package by.logonuk.controller.responses.user;
 
+import by.logonuk.controller.responses.deal.DealResponse;
+import by.logonuk.controller.responses.licence.DrivingLicenceResponse;
 import by.logonuk.domain.Role;
 import by.logonuk.domain.attachments.Credentials;
 import lombok.Data;

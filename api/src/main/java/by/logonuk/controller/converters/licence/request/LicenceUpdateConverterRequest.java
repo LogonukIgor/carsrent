@@ -1,6 +1,6 @@
 package by.logonuk.controller.converters.licence.request;
 
-import by.logonuk.controller.requests.DrivingLicenceUpdateRequest;
+import by.logonuk.controller.requests.licence.DrivingLicenceUpdateRequest;
 import by.logonuk.domain.DrivingLicence;
 import org.springframework.stereotype.Component;
 

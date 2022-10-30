@@ -1,6 +1,6 @@
 package by.logonuk.controller.converters.deal.response;
 
-import by.logonuk.controller.responses.DealResponse;
+import by.logonuk.controller.responses.deal.DealResponse;
 import by.logonuk.domain.Deal;
 import org.springframework.core.convert.converter.Converter;
 

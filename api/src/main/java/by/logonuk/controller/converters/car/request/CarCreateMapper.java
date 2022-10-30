@@ -1,6 +1,6 @@
 package by.logonuk.controller.converters.car.request;
 
-import by.logonuk.controller.requests.CarCreateRequest;
+import by.logonuk.controller.requests.car.CarCreateRequest;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.CarManufacture;
 import by.logonuk.domain.Classification;

@@ -1,6 +1,6 @@
 package by.logonuk.controller.converters.car.response;
 
-import by.logonuk.controller.responses.CarResponse;
+import by.logonuk.controller.responses.car.CarResponse;
 import by.logonuk.domain.Car;
 import org.springframework.stereotype.Component;
 

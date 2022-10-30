@@ -1,4 +1,4 @@
-package by.logonuk.controller.auth;
+package by.logonuk.controller.responses.auth;
 
 import lombok.Builder;
 import lombok.Data;

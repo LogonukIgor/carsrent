@@ -1,8 +1,14 @@
 package by.logonuk.controller;
 
-import by.logonuk.controller.auth.AuthRequest;
-import by.logonuk.controller.auth.AuthResponse;
+import by.logonuk.controller.requests.auth.AuthRequest;
+import by.logonuk.controller.responses.auth.AuthResponse;
 import by.logonuk.security.jwt.JwtTokenHelper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "Auth controller")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
 
@@ -26,6 +33,16 @@ public class AuthenticationController {
     private final UserDetailsService userProvider;
 
     @PostMapping
+    @Operation(summary = "Login",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Token",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = AuthResponse.class))))
+            })
     public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest request) {
 
         Authentication authenticate = authenticationManager.authenticate(

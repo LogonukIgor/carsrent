@@ -1,5 +1,9 @@
 package by.logonuk.controller.responses;
 
+import by.logonuk.controller.responses.car.CarResponse;
+import by.logonuk.controller.responses.deal.DealResponse;
+import by.logonuk.controller.responses.licence.DrivingLicenceResponse;
+import by.logonuk.controller.responses.user.UserResponse;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.Deal;
 import by.logonuk.domain.DrivingLicence;

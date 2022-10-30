@@ -2,9 +2,9 @@ package by.logonuk.controller;
 
 import by.logonuk.controller.converters.car.request.CarCreateMapper;
 import by.logonuk.controller.converters.car.request.CarUpdateMapper;
-import by.logonuk.controller.requests.CarCreateRequest;
-import by.logonuk.controller.requests.CarUpdateRequest;
-import by.logonuk.controller.responses.CarResponse;
+import by.logonuk.controller.requests.car.CarCreateRequest;
+import by.logonuk.controller.requests.car.CarUpdateRequest;
+import by.logonuk.controller.responses.car.CarResponse;
 import by.logonuk.domain.Car;
 import by.logonuk.domain.Deal;
 import by.logonuk.domain.User;
@@ -14,7 +14,16 @@ import by.logonuk.repository.CarRepository;
 import by.logonuk.repository.UserRepository;
 import by.logonuk.security.util.PrincipalUtil;
 import by.logonuk.service.CarService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -41,6 +50,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cars")
+@Tag(name = "Car controller")
 @Transactional
 public class CarController {
 
@@ -55,7 +65,17 @@ public class CarController {
     private static final String RESULT = "result";
 
     @GetMapping
-    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
+    @Operation(summary = "Get car",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Find car",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = CarResponse.class))))
+            })
     public ResponseEntity<Object> findById(@ApiIgnore Principal principal) {
         String login = PrincipalUtil.getUsername(principal);
         Optional<User> searchUser = userRepository.findByCredentialsLoginAndTechnicalInfoIsDeleted(login, false);
@@ -69,8 +89,17 @@ public class CarController {
     }
 
     @GetMapping("/all")
-    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
-    public ResponseEntity<Object> findAllCars(@ApiIgnore Principal principal, @ApiIgnore Pageable pageable) {
+    @Operation(summary = "Get all cars",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Find cars",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = CarResponse.class))))
+            })
+    public ResponseEntity<Object> findAllCars(@ParameterObject Pageable pageable) {
         return new ResponseEntity<>(Collections.singletonMap(RESULT,
                 repository.findAll(pageable)
                         .stream()
@@ -80,13 +109,28 @@ public class CarController {
     }
 
     @GetMapping("/function")
-    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
-    public ResponseEntity<Object> getNumberOfCarsInStock(@ApiIgnore Principal principal) {
+    @Operation(summary = "Get number of cars in stock", parameters = {
+            @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", description = "Token",
+                    schema = @Schema(defaultValue = "token", type = "string"))
+    })
+    public ResponseEntity<Object> getNumberOfCarsInStock() {
         return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.carsInStock()), HttpStatus.OK);
     }
 
     @PostMapping
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @Operation(summary = "Create car", description = "Create car - return created car",
+            parameters = {@Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", description = "Token",
+                    schema = @Schema(defaultValue = "token", type = "string"))},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Successfully created car",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = CarResponse.class))))
+            })
     public ResponseEntity<Object> createCar(@Valid @RequestBody CarCreateRequest carCreateRequest, @ApiIgnore Principal principal) {
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
@@ -101,17 +145,41 @@ public class CarController {
 
     @PutMapping
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @Operation(summary = "Update car", description = "Update car - return updated car",
+            parameters = {@Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", description = "Token",
+                    schema = @Schema(defaultValue = "token", type = "string"))},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully updated car",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = CarResponse.class))))
+            })
     public ResponseEntity<Object> updateCar(@Valid @RequestBody CarUpdateRequest carUpdateRequest, @ApiIgnore Principal principal) {
 
         CarUpdateMapper carCreateMapping = new CarUpdateMapper(repository, carUpdateRequest, new Timestamp((new Date().getTime())));
 
         Car updatedCar = carService.updateCar(carCreateMapping.carMapping(), carCreateMapping.modelMapping(), carCreateMapping.classificationMapping(), carCreateMapping.carManufactureMapping());
 
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedCar, CarResponse.class)), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(updatedCar, CarResponse.class)), HttpStatus.OK);
     }
 
     @PatchMapping
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    @Operation(summary = "Delete car(soft)", description = "Delete car - return deleted car",
+            parameters = {@Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", description = "Token",
+                    schema = @Schema(defaultValue = "token", type = "string"))},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully delete car",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = CarResponse.class))))
+            })
     public ResponseEntity<Object> softCarDelete(@ApiIgnore Principal principal) {
 
         Optional<User> searchUser = userRepository.findByCredentialsLoginAndTechnicalInfoIsDeleted(PrincipalUtil.getUsername(principal), false);
