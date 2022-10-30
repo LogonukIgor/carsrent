@@ -9,6 +9,6 @@ import javax.validation.constraints.Pattern;
 public class CarUpdateRequest extends CarCreateRequest {
 
     @NotNull(message = "Car id must not be null")
-    @Pattern(regexp = "^\\d*", message = "Car id must contain only numbers")
+    @Pattern(regexp = "^\\d*$", message = "Car id must contain only numbers")
     private String carId;
 }

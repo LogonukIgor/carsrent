@@ -29,6 +29,8 @@ public class DealService {
 
     private final DealRepository dealRepository;
 
+    private final ArchiveService archiveService;
+
     private final MailSenderService mailSender;
 
     @Transactional
@@ -42,8 +44,10 @@ public class DealService {
         User user = searchUser.orElseThrow(() -> new NoSuchEntityException("User with id = " + userId + " does not exist"));
         Car car = searchCar.orElseThrow(() -> new NoSuchEntityException("Car with id = " + carId + " does not exist"));
 
-        if(user.getDrivingLicence()==null){
+        if (user.getDrivingLicence() == null) {
             throw new NoSuchEntityException("User with id = " + userId + " does not have a licence");
+        }else if (user.getDeal() != null){
+            throw new NoSuchEntityException("User with id = " + userId + " also has a deal");
         }
         Map<String, Object> entityMap = new HashMap<>(2);
         entityMap.put("user", user);
@@ -62,7 +66,7 @@ public class DealService {
         return deal;
     }
 
-    private Double costCalculation(Deal deal, Car car){
+    private Double costCalculation(Deal deal, Car car) {
         Double dateDifferenceDay = (deal.getReturnDate().getTime() - deal.getReceivingDate().getTime()) / (8.64 * Math.pow(10, 7));
         return (double) Math.round(dateDifferenceDay * car.getCostPerDay());
     }
@@ -87,10 +91,15 @@ public class DealService {
     }
 
     @Transactional
-    public void deleteDeal(Deal deal) {
+    public void deleteDeal(Deal deal, User user, Boolean isSuccessfully) {
+
+        archiveService.archive(deal, user, isSuccessfully);
+
         Car car = deal.getCar();
         car.setIsInStock(true);
+        user.setDeal(null);
+
+        userRepository.save(user);
         carRepository.save(car);
-        dealRepository.delete(deal);
     }
 }

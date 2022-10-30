@@ -11,11 +11,11 @@ import java.sql.Timestamp;
 public class DealCreateRequest {
 
     @NotNull(message = "Deal userId must not be null")
-    @Pattern(regexp = "^\\d*", message = "User id must contain only numbers")
+    @Pattern(regexp = "^\\d*$", message = "User id must contain only numbers")
     private String userId;
 
     @NotNull(message = "Deal carId must not be null")
-    @Pattern(regexp = "^\\d*", message = "Car id must contain only numbers")
+    @Pattern(regexp = "^\\d*$", message = "Car id must contain only numbers")
     private String carId;
 
     @NotNull(message = "Deal receivingDate must not be null")

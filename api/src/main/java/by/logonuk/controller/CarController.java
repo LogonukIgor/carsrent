@@ -19,6 +19,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,6 +55,7 @@ public class CarController {
     private static final String RESULT = "result";
 
     @GetMapping
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findById(@ApiIgnore Principal principal) {
         String login = PrincipalUtil.getUsername(principal);
         Optional<User> searchUser = userRepository.findByCredentialsLoginAndTechnicalInfoIsDeleted(login, false);
@@ -67,6 +69,7 @@ public class CarController {
     }
 
     @GetMapping("/all")
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findAllCars(@ApiIgnore Principal principal, @ApiIgnore Pageable pageable) {
         return new ResponseEntity<>(Collections.singletonMap(RESULT,
                 repository.findAll(pageable)
@@ -76,7 +79,14 @@ public class CarController {
                 , HttpStatus.OK);
     }
 
+    @GetMapping("/function")
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
+    public ResponseEntity<Object> getNumberOfCarsInStock(@ApiIgnore Principal principal) {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.carsInStock()), HttpStatus.OK);
+    }
+
     @PostMapping
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> createCar(@Valid @RequestBody CarCreateRequest carCreateRequest, @ApiIgnore Principal principal) {
 
         Timestamp timestamp = new Timestamp(new Date().getTime());
@@ -90,6 +100,7 @@ public class CarController {
     }
 
     @PutMapping
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> updateCar(@Valid @RequestBody CarUpdateRequest carUpdateRequest, @ApiIgnore Principal principal) {
 
         CarUpdateMapper carCreateMapping = new CarUpdateMapper(repository, carUpdateRequest, new Timestamp((new Date().getTime())));
@@ -100,6 +111,7 @@ public class CarController {
     }
 
     @PatchMapping
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> softCarDelete(@ApiIgnore Principal principal) {
 
         Optional<User> searchUser = userRepository.findByCredentialsLoginAndTechnicalInfoIsDeleted(PrincipalUtil.getUsername(principal), false);
@@ -113,10 +125,5 @@ public class CarController {
         car.getTechnicalInfo().setIsDeleted(true);
         repository.save(car);
         return new ResponseEntity<>(Collections.singletonMap(RESULT, converter.convert(car, CarResponse.class)), HttpStatus.OK);
-    }
-
-    @GetMapping("/function")
-    public ResponseEntity<Object> getNumberOfCarsInStock(@ApiIgnore Principal principal) {
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.carsInStock()), HttpStatus.OK);
     }
 }

@@ -4,8 +4,8 @@ import by.logonuk.exception.CreateLicenceForUserException;
 import by.logonuk.exception.CustomIllegalArgumentException;
 import by.logonuk.exception.DateValidationException;
 import by.logonuk.exception.NoSuchEntityException;
+import by.logonuk.exception.UniqueConstraintException;
 import by.logonuk.util.UUIDGenerator;
-import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,6 @@ public class DefaultExceptionHandler {
                 .errorCode(2)
                 .errorMessage(e.getMessage())
                 .errorClass(e.getClass().toString())
-//                .message(ExceptionUtils.getStackTrace(e))
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
@@ -48,10 +47,23 @@ public class DefaultExceptionHandler {
                 .errorCode(5)
                 .errorMessage(e.toString())
                 .errorClass(e.getClass().toString())
-//                .message(ExceptionUtils.getStackTrace(e))
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UniqueConstraintException.class)
+    public ResponseEntity<Object> handleUniqueConstraintException(UniqueConstraintException e) {
+
+        ErrorContainer error = ErrorContainer
+                .builder()
+                .exceptionId(UUIDGenerator.generateUUID())
+                .errorCode(11)
+                .errorMessage(e.toString())
+                .errorClass(e.getClass().toString())
+                .build();
+
+        return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -63,7 +75,6 @@ public class DefaultExceptionHandler {
                 .errorCode(3)
                 .errorMessage(e.getMessage())
                 .errorClass(e.getClass().toString())
-//                .message(/*"Transmission and classification write error" + */ExceptionUtils.getStackTrace(e))
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
@@ -78,7 +89,6 @@ public class DefaultExceptionHandler {
                 .errorCode(4)
                 .errorMessage(e.getMessage())
                 .errorClass(e.getClass().toString())
-//                .message(ExceptionUtils.getStackTrace(e))
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
@@ -91,7 +101,7 @@ public class DefaultExceptionHandler {
                 .builder()
                 .exceptionId(UUIDGenerator.generateUUID())
                 .errorCode(1)
-                .errorMessage("General error: "+ e.getMessage())
+                .errorMessage("General error: " + e.getMessage())
                 .errorClass(e.getClass().toString())
                 .build();
 
@@ -107,7 +117,6 @@ public class DefaultExceptionHandler {
                 .errorCode(6)
                 .errorMessage(e.getMessage())
                 .errorClass(e.getClass().toString())
-//                .message(ExceptionUtils.getStackTrace(e))
                 .build();
 
         return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
@@ -120,7 +129,7 @@ public class DefaultExceptionHandler {
 
         Map<String, String> allValidExceptions = new HashMap<>();
 
-        for(FieldError a: errors){
+        for (FieldError a : errors) {
             allValidExceptions.put(a.getField(), a.getDefaultMessage());
         }
 
@@ -133,7 +142,7 @@ public class DefaultExceptionHandler {
                 .errorClass(e.getClass().toString())
                 .build();
 
-        return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomIllegalArgumentException.class)

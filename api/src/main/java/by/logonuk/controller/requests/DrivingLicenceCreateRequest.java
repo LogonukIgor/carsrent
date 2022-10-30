@@ -23,9 +23,10 @@ public class DrivingLicenceCreateRequest {
 
     @NotNull(message = "Licence serialNumber must not be null")
     @Size(min = 9, max = 9, message = "The serial number must contain 9 numbers and letters")
+    @Pattern(regexp = "^\\d[A-Z]{3}\\d{5}$", message = "The serial number must be in this pattern: 0AAA00000")
     private String serialNumber;
 
     @NotNull(message = "Licence userId must not be null")
-    @Pattern(regexp = "^\\d*", message = "User id must contain only numbers")
+    @Pattern(regexp = "^\\d*$", message = "User id must contain only numbers")
     private String userId;
 }

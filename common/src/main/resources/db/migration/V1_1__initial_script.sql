@@ -94,6 +94,9 @@ alter sequence class_class_id_seq owned by classification.id;
 create unique index if not exists class_class_id_uindex
     on classification (id);
 
+create unique index if not exists classification_classification_letter_uindex
+    on classification (classification_letter);
+
 create table if not exists cars
 (
     id                bigint       default nextval('cars_rent.cars_car_id_seq'::regclass) not null
@@ -172,12 +175,6 @@ create index if not exists order_return_date_index
 create index if not exists order_price_index
     on deal (price);
 
-create unique index if not exists l_users_cars_user_id_uindex
-    on deal (user_id);
-
-create unique index if not exists l_users_cars_car_id_uindex
-    on deal (car_id);
-
 create table if not exists models
 (
     id                serial
@@ -220,8 +217,8 @@ create table if not exists driving_licence
     id                bigserial
         constraint driving_licence_pk
             primary key,
-    date_of_issue     date                                      not null,
-    valid_until       date                                      not null,
+    date_of_issue     timestamp(6)                              not null,
+    valid_until       timestamp(6)                              not null,
     category_b        boolean      default true                 not null,
     serial_number     varchar(9)                                not null,
     creation_date     timestamp(6) default CURRENT_TIMESTAMP(6) not null,
@@ -306,3 +303,36 @@ create unique index if not exists l_brand_model_class_id_uindex
 
 create unique index if not exists l_brand_model_class_car_id_uindex
     on l_brand_model_class (car_id);
+
+create table if not exists cars_rent.archive
+(
+    id                bigserial
+        primary key
+        unique,
+    user_id           bigint            not null,
+    car_id            bigint            not null,
+    receiving_date    timestamp(6)      not null,
+    return_date       timestamp(6),
+    price             float8            not null,
+    creation_date     timestamp(5)      not null,
+    modification_date timestamp(6),
+    is_deleted        bool default true not null
+);
+
+create index if not exists archive_car_id_index
+    on cars_rent.archive (car_id);
+
+create index if not exists archive_creation_date_index
+    on cars_rent.archive (creation_date);
+
+create index if not exists archive_is_deleted_index
+    on cars_rent.archive (is_deleted);
+
+create index if not exists archive_receiving_date_index
+    on cars_rent.archive (receiving_date);
+
+create index if not exists archive_user_id_index
+    on cars_rent.archive (user_id);
+
+alter table cars_rent.archive
+    add is_successfully bool default true not null;

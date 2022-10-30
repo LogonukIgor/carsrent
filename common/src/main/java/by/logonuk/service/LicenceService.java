@@ -5,6 +5,7 @@ import by.logonuk.domain.User;
 import by.logonuk.domain.attachments.TechnicalInfo;
 import by.logonuk.exception.CreateLicenceForUserException;
 import by.logonuk.exception.NoSuchEntityException;
+import by.logonuk.exception.UniqueConstraintException;
 import by.logonuk.repository.DrivingLicenceRepository;
 import by.logonuk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,17 +49,30 @@ public class LicenceService {
     @Transactional
     public DrivingLicence createLicence(User user, DrivingLicence drivingLicence){
         drivingLicence.setUser(user);
+
+        try {
         repository.save(drivingLicence);
+        } catch (Exception e) {
+            throw new UniqueConstraintException("Login must be unique");
+        }
+
         return drivingLicence;
     }
 
     @Transactional
     public DrivingLicence updateLicence(User user, DrivingLicence drivingLicence) {
         drivingLicence.setUser(user);
+
         Timestamp timestamp = new Timestamp(new Date().getTime());
         TechnicalInfo technicalInfo = new TechnicalInfo(user.getDrivingLicence().getTechnicalInfo().getCreationDate(), timestamp, false);
         drivingLicence.setTechnicalInfo(technicalInfo);
+
+        try {
         repository.save(drivingLicence);
+        } catch (Exception e) {
+            throw new UniqueConstraintException("Login must be unique");
+        }
+
         return drivingLicence;
     }
 }

@@ -5,6 +5,7 @@ import by.logonuk.domain.User;
 import by.logonuk.domain.attachments.TechnicalInfo;
 import by.logonuk.domain.enums.SystemRoles;
 import by.logonuk.exception.NoSuchEntityException;
+import by.logonuk.exception.UniqueConstraintException;
 import by.logonuk.repository.RoleRepository;
 import by.logonuk.repository.UserRepository;
 import by.logonuk.service.mailsender.MailSenderService;
@@ -34,7 +35,11 @@ public class UserService {
     public User createUserWithAnonymousRole(User user) {
 
         user.setActivationCode(UUID.randomUUID().toString());
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new UniqueConstraintException("Login must be unique");
+        }
         mailSender.sendMailToUserActivator(user);
 
         userRepository.getRoleToUser(
@@ -46,7 +51,11 @@ public class UserService {
     public User updateUserToUserRole(User user) {
         user.setActivationCode(null);
         user.setIsMailActivated(true);
+        try {
         userRepository.save(user);
+        } catch (Exception e) {
+            throw new UniqueConstraintException("Login must be unique");
+        }
         userRepository.getRoleToUser(
                 user.getId(), roleRepository.findByRoleName(SystemRoles.ROLE_USER).getId());
         return responseUserWithRoles(user, SystemRoles.ROLE_USER);

@@ -1,5 +1,6 @@
 package by.logonuk.controller;
 
+import by.logonuk.controller.requests.ArchiveRequest;
 import by.logonuk.controller.requests.DealCreateRequest;
 import by.logonuk.controller.requests.DealUpdateRequest;
 import by.logonuk.controller.responses.ResponseMapper;
@@ -17,9 +18,11 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,28 +58,37 @@ public class DealController {
     private static final String RESULT = "result";
 
     @GetMapping
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findById(Principal principal) {
         String login = PrincipalUtil.getUsername(principal);
         Optional<User> searchUser = userRepository.findByCredentialsLoginAndTechnicalInfoIsDeleted(login, false);
 
         Deal deal = searchUser.get().getDeal();
-        if(deal == null){
+        if (deal == null) {
             throw new NoSuchEntityException("User does not have a deal");
         }
         return new ResponseEntity<>(Collections.singletonMap(RESULT, responseMapper.mapDealResponse(deal)), HttpStatus.OK);
     }
 
     @GetMapping("/all")
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findAllDeals(@ApiIgnore Principal principal) {
 
         return new ResponseEntity<>(Collections.singletonMap(RESULT,
                 repository.findAllByTechnicalInfoIsDeleted(false)
                         .stream()
-                        .map(i -> responseMapper.mapDealResponse(i)).collect(Collectors.toList()))
+                        .map(responseMapper::mapDealResponse).toList())
                 , HttpStatus.OK);
     }
 
+    @GetMapping("/function")
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    public ResponseEntity<Object> getNumberOfDeals(@ApiIgnore Principal principal) {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.CountOfDeals()), HttpStatus.OK);
+    }
+
     @PostMapping
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> createDeal(@Valid @RequestBody DealCreateRequest dealCreateRequest, @ApiIgnore Principal principal) {
 
         Map<String, Object> entityMap = dealService.validateDeal(dealCreateRequest.getUserId(), dealCreateRequest.getCarId());
@@ -89,6 +101,7 @@ public class DealController {
     }
 
     @PutMapping
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> updateDeal(@Valid @RequestBody DealUpdateRequest dealUpdateRequest, @ApiIgnore Principal principal) {
 
         Map<String, Object> entityMap = dealService.validateDeal(dealUpdateRequest.getUserId(), dealUpdateRequest.getCarId());
@@ -101,24 +114,20 @@ public class DealController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Object> deleteDeal(@ApiIgnore Principal principal) {
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    public ResponseEntity<Object> softDeleteDeal(@RequestBody ArchiveRequest archiveRequest, @ApiIgnore Principal principal) {
+        Long userId = Long.parseLong(archiveRequest.getUserId());
+        Optional<User> searchUser = userRepository.findByIdAndTechnicalInfoIsDeleted(userId, false);
 
-        String login = PrincipalUtil.getUsername(principal);
-        Optional<User> searchUser = userRepository.findByCredentialsLoginAndTechnicalInfoIsDeleted(login, false);
-        Deal deal = searchUser.get().getDeal();
+        User user = searchUser.orElseThrow(() -> new NoSuchEntityException("User with id = " + userId + " does not exist"));
+        Deal deal = user.getDeal();
 
-        if(deal == null){
+        if (deal == null) {
             throw new NoSuchEntityException("User does not have a deal");
         }
 
-        deal.getTechnicalInfo().setIsDeleted(true);
-        dealService.deleteDeal(deal);
+        dealService.deleteDeal(deal, user, archiveRequest.getIsSuccessfully());
 
         return new ResponseEntity<>(Collections.singletonMap(RESULT, responseMapper.mapDealResponse(deal)), HttpStatus.OK);
-    }
-
-    @GetMapping("/function")
-    public ResponseEntity<Object> getNumberOfDeals(@ApiIgnore Principal principal){
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.CountOfDeals()), HttpStatus.OK);
     }
 }

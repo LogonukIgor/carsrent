@@ -66,20 +66,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/swagger-ui/index").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/auth").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(MODERATOR, ADMIN)
-                .antMatchers(HttpMethod.GET, "/users").hasAnyRole(USER, ANONYMOUS, MODERATOR, ADMIN)
-
-                .antMatchers(HttpMethod.GET, "/licence/all").hasAnyRole(MODERATOR, ADMIN)
-                .antMatchers("/licence").hasAnyRole(USER, MODERATOR, ADMIN)
-
-                .antMatchers(HttpMethod.GET, "/deals/**").hasAnyRole(MODERATOR, ADMIN)
-                .antMatchers("/deals").hasAnyRole(USER, MODERATOR, ADMIN)
-
-                .antMatchers(HttpMethod.POST, "/cars").hasAnyRole(MODERATOR, ADMIN)
-                .antMatchers(HttpMethod.PUT, "/cars").hasAnyRole(MODERATOR, ADMIN)
-                .antMatchers(HttpMethod.PATCH, "/cars").hasAnyRole(MODERATOR, ADMIN)
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers(HttpMethod.PUT, "/users").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/activation").permitAll()
                 .anyRequest()
                 .authenticated();
 

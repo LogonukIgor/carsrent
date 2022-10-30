@@ -11,12 +11,12 @@ public class UserCreateRequest {
 
     @NotNull(message = "User name must not be null")
     @Size(min = 2, max = 20, message = "User name size must be between 2 and 20")
-    @Pattern(regexp = "^[A-Z][a-z]*", message = "User name must start with a capital letter and contain only letters")
+    @Pattern(regexp = "^[A-Z][a-z]*$", message = "User name must start with a capital letter and contain only letters")
     private String userName;
 
     @NotNull(message = "User surname must not be null")
     @Size(min = 2, max = 20, message = "Surname size must be between 2 and 20")
-    @Pattern(regexp = "^[A-Z][a-z]*", message = "Surname must start with a capital letter and contain only letters")
+    @Pattern(regexp = "^[A-Z][a-z]*$", message = "Surname must start with a capital letter and contain only letters")
     private String surname;
 
     @NotNull(message = "User login must not be null")
@@ -24,7 +24,7 @@ public class UserCreateRequest {
     private String login;
 
     @NotNull(message = "User password must not be null")
-    @Size(min = 8, max = 200, message = "Password size must be between 2 and 200")
+    @Size(min = 4, max = 200, message = "Password size must be between 2 and 200")
     private String password;
 
     @NotNull(message = "User mail must not be null")

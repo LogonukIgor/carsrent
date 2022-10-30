@@ -17,11 +17,36 @@ public class LicenceAspect {
 
     private static final String METHOD_START = "Method %s start";
 
-    @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.*(..))")
-    public void afterLicencePointcut() {
+    @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.createLicence(..))")
+    public void afterLicenceCreatePointcut() {
     }
-    @Around("afterLicencePointcut()")
-    public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+
+    @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.updateLicence(..))")
+    public void afterLicenceUpdatePointcut() {
+    }
+
+    @Pointcut("execution(public * by.logonuk.controller.DrivingLicenceController.deleteLicence(..))")
+    public void afterLicenceDeletePointcut() {
+    }
+
+    @Around("afterLicenceCreatePointcut()")
+    public Object logAroundCreateMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info(String.format(METHOD_START, joinPoint.getSignature().getName()));
+        Object proceed = joinPoint.proceed();
+        log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
+        return proceed;
+    }
+
+    @Around("afterLicenceUpdatePointcut()")
+    public Object logAroundUpdateMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info(String.format(METHOD_START, joinPoint.getSignature().getName()));
+        Object proceed = joinPoint.proceed();
+        log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
+        return proceed;
+    }
+
+    @Around("afterLicenceDeletePointcut()")
+    public Object logAroundDeleteMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info(String.format(METHOD_START, joinPoint.getSignature().getName()));
         Object proceed = joinPoint.proceed();
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));

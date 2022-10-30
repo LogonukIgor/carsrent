@@ -13,7 +13,7 @@ public class ExceptionAspect {
 
     private static final Logger log = Logger.getLogger(ExceptionAspect.class);
 
-    private static final String EXCEPTION = "Exception %s";
+    private static final String EXCEPTION = "Exception - %s";
 
     @Pointcut("execution(public * by.logonuk.exceptionhandle.DefaultExceptionHandler.*(..))")
     public void afterExceptionPointcut() {

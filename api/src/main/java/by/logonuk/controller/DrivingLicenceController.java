@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +52,7 @@ public class DrivingLicenceController {
     private static final String LICENCE_NOT_FOUND = "Licence with this %s = %d does not exist";
 
     @GetMapping()
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findById(@ApiIgnore Principal principal) {
 
         String login = PrincipalUtil.getUsername(principal);
@@ -62,6 +64,7 @@ public class DrivingLicenceController {
     }
 
     @GetMapping("/all")
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findAllUsers(@ApiIgnore Principal principal) {
         return new ResponseEntity<>(Collections.singletonMap(RESULT,
                 repository.findAll().stream()
@@ -71,6 +74,7 @@ public class DrivingLicenceController {
 
 
     @PostMapping
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> createLicence(@Valid @RequestBody DrivingLicenceCreateRequest drivingLicenceCreateRequest, @ApiIgnore Principal principal){
 
         User user = licenceService.validateLicenceForUser(drivingLicenceCreateRequest.getUserId());
@@ -84,6 +88,7 @@ public class DrivingLicenceController {
     }
 
     @PutMapping
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> updateLicence(@Valid @RequestBody DrivingLicenceUpdateRequest drivingLicenceUpdateRequest, @ApiIgnore Principal principal){
 
         User user = licenceService.validateLicenceForUserUpdate(drivingLicenceUpdateRequest.getUserId());
@@ -97,6 +102,7 @@ public class DrivingLicenceController {
     }
 
     @DeleteMapping
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> deleteLicence(@ApiIgnore Principal principal) {
 
         String login = PrincipalUtil.getUsername(principal);

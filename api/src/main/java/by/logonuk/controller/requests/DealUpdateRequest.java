@@ -9,6 +9,6 @@ import javax.validation.constraints.Pattern;
 public class DealUpdateRequest extends DealCreateRequest{
 
     @NotNull(message = "Deal id must not be null")
-    @Pattern(regexp = "^\\d*", message = "Deal id must contain only numbers")
+    @Pattern(regexp = "^\\d*$", message = "Deal id must contain only numbers")
     private Long dealId;
 }

@@ -17,12 +17,36 @@ public class DealAspect {
 
     private static final String METHOD_START = "Method %s start";
 
-    @Pointcut("execution(public * by.logonuk.controller.DealController.*(..))")
-    public void afterDealPointcut() {
+    @Pointcut("execution(public * by.logonuk.controller.DealController.createDeal(..))")
+    public void afterDealCreatePointcut() {
     }
 
-    @Around("afterDealPointcut()")
-    public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Pointcut("execution(public * by.logonuk.controller.DealController.updateDeal(..))")
+    public void afterDealUpdatePointcut() {
+    }
+
+    @Pointcut("execution(public * by.logonuk.controller.DealController.softDeleteDeal(..))")
+    public void afterDealDeletePointcut() {
+    }
+
+    @Around("afterDealCreatePointcut()")
+    public Object logAroundCreateMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info(String.format(METHOD_START, joinPoint.getSignature().getName()));
+        Object proceed = joinPoint.proceed();
+        log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
+        return proceed;
+    }
+
+    @Around("afterDealUpdatePointcut()")
+    public Object logAroundUpdateMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info(String.format(METHOD_START, joinPoint.getSignature().getName()));
+        Object proceed = joinPoint.proceed();
+        log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));
+        return proceed;
+    }
+
+    @Around("afterDealDeletePointcut()")
+    public Object logAroundDeleteMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info(String.format(METHOD_START, joinPoint.getSignature().getName()));
         Object proceed = joinPoint.proceed();
         log.info(String.format(METHOD_FINISHED, joinPoint.getSignature().getName()));

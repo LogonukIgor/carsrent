@@ -9,6 +9,6 @@ import javax.validation.constraints.Pattern;
 public class UserUpdateRequest extends UserCreateRequest{
 
     @NotNull(message = "User id must not be null")
-    @Pattern(regexp = "^\\d*", message = "User id must contain only numbers")
+    @Pattern(regexp = "^\\d*$", message = "User id must contain only numbers")
     private String userId;
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -47,6 +48,7 @@ public class UserController {
     private static final String USER_NOT_FOUND = "User with this %s = %s does not exist";
 
     @GetMapping()
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findById(@ApiIgnore Principal principal) {
 
         String login = PrincipalUtil.getUsername(principal);
@@ -58,11 +60,29 @@ public class UserController {
     }
 
     @GetMapping("/all")
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> findAllUsers(@ApiIgnore Principal principal) {
         return new ResponseEntity<>(Collections.singletonMap(RESULT,
                 repository.findAllByTechnicalInfoIsDeleted(false).stream()
                         .map(userResponseMapper::mapUserResponse)
                         .toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/function")
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    public ResponseEntity<Object> getNumberOfUsers(@ApiIgnore Principal principal) {
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.numberOfUsers(false)), HttpStatus.OK);
+    }
+
+    @GetMapping("/activation")
+    public ResponseEntity<Object> activationUserMail(@RequestParam("code") String code) {
+
+        Optional<User> searchResult = repository.findByActivationCodeAndTechnicalInfoIsDeleted(code, false);
+        User user = searchResult.orElseThrow(() -> new NoSuchEntityException("User with this activation code = " + code + " does not exist activation code"));
+
+        User savedUser = userService.updateUserToUserRole(user);
+
+        return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(savedUser)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -73,19 +93,8 @@ public class UserController {
         return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(savedUser)), HttpStatus.CREATED);
     }
 
-    @GetMapping("/activation")
-    public ResponseEntity<Object> activationUserMail(@RequestParam("code") String code) {
-
-        Optional<User> searchResult = repository.findByActivationCodeAndTechnicalInfoIsDeleted(code, false);
-        User user = searchResult.orElseThrow(() -> new NoSuchEntityException("User with this activation code = " + code + " does not exist activation code"));
-
-        userService.updateUserToUserRole(user);
-        User savedUser = userService.updateUserToUserRole(user);
-
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(savedUser)), HttpStatus.OK);
-    }
-
     @PutMapping
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Principal principal) {
 
         User user = converter.convert(userUpdateRequest, User.class);
@@ -95,6 +104,7 @@ public class UserController {
     }
 
     @PatchMapping("/delete")
+    @Secured({"ROLE_ANONYMOUS", "ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<Object> softUserDelete(@ApiIgnore Principal principal) {
 
         String login = PrincipalUtil.getUsername(principal);
@@ -106,10 +116,5 @@ public class UserController {
         repository.save(user);
 
         return new ResponseEntity<>(Collections.singletonMap(RESULT, userResponseMapper.mapUserResponse(user)), HttpStatus.OK);
-    }
-
-    @GetMapping("/function")
-    public ResponseEntity<Object> getNumberOfUsers(@ApiIgnore Principal principal) {
-        return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.numberOfUsers(false)), HttpStatus.OK);
     }
 }
