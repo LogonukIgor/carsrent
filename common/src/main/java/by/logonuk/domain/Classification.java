@@ -27,6 +27,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "classification")
 @Cacheable(cacheNames = "classification", cacheManager = "cacheManagerClassification")
+/*
+    Entity for forming a car in BD,
+    as well as searching for a suitable car on UI
+ */
 public class Classification {
 
     @Id

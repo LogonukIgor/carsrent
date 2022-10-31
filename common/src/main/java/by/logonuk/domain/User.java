@@ -38,6 +38,7 @@ import java.util.Set;
 @Table(name = "users")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
+//Main entity
 public class User {
 
     @Id

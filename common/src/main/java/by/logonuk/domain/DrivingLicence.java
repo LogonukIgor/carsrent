@@ -26,6 +26,7 @@ import java.sql.Timestamp;
 @Table(name = "driving_licence")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
+//Entity for the formation of a driver's license
 public class DrivingLicence {
 
     @Id

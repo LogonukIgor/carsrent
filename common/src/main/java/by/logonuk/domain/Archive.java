@@ -18,6 +18,10 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "archive")
+/*
+    Entity to archive all completed orders
+    regardless of success - isSuccessfully(true/false)
+ */
 public class Archive {
 
     @Id

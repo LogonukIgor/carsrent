@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 @Table(name = "deal")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
+//Entity for the formation of a user orders
 public class Deal {
 
     @Id

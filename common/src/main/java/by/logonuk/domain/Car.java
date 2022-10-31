@@ -32,6 +32,7 @@ import java.sql.Timestamp;
 @Table(name = "cars")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
+//Entity for the formation of a cars
 public class Car {
 
     @Id

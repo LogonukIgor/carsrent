@@ -13,18 +13,18 @@ public class UserCreateRequest {
 
     @NotNull(message = "User name must not be null")
     @Size(min = 2, max = 20, message = "User name size must be between 2 and 20")
-    @Pattern(regexp = "^[A-Z][a-z]*$", message = "User name must start with a capital letter and contain only letters")
+    @Pattern(regexp = "^[A-Za-z]*$", message = "User name must start with a capital letter and contain only letters")
     @Schema(description = "User name", required = true, type = "string")
     private String userName;
 
     @NotNull(message = "User surname must not be null")
     @Size(min = 2, max = 20, message = "Surname size must be between 2 and 20")
-    @Pattern(regexp = "^[A-Z][a-z]*$", message = "Surname must start with a capital letter and contain only letters")
+    @Pattern(regexp = "^[A-Za-z]*$", message = "Surname must start with a capital letter and contain only letters")
     @Schema(description = "User surname", required = true, type = "string")
     private String surname;
 
     @NotNull(message = "User login must not be null")
-    @Size(min = 2, max = 100, message = "Login size must be between 2 and 100")
+    @Size(min = 4, max = 100, message = "Login size must be between 2 and 100")
     @Schema(description = "User login", required = true, type = "string")
     private String login;
 

@@ -27,6 +27,14 @@ import javax.persistence.Table;
 @Table(name = "l_brand_model_class")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
+/*
+    The library is an entity
+    for finding a suitable car for the user
+    according to the appropriate parameters:
+    1) CarManufacturer
+    2) Classification
+    3) Model
+ */
 public class Library {
 
     @Id
@@ -67,3 +75,5 @@ public class Library {
     @JsonIgnoreProperties("library")
     private Car car;
 }
+
+

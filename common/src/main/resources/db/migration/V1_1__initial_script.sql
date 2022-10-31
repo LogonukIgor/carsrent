@@ -309,8 +309,8 @@ create table if not exists cars_rent.archive
     id                bigserial
         primary key
         unique,
-    user_id           bigint            not null,
-    car_id            bigint            not null,
+    a_user_id           bigint            not null,
+    a_car_id            bigint            not null,
     receiving_date    timestamp(6)      not null,
     return_date       timestamp(6),
     price             float8            not null,
@@ -320,7 +320,7 @@ create table if not exists cars_rent.archive
 );
 
 create index if not exists archive_car_id_index
-    on cars_rent.archive (car_id);
+    on cars_rent.archive (a_car_id);
 
 create index if not exists archive_creation_date_index
     on cars_rent.archive (creation_date);
@@ -332,7 +332,7 @@ create index if not exists archive_receiving_date_index
     on cars_rent.archive (receiving_date);
 
 create index if not exists archive_user_id_index
-    on cars_rent.archive (user_id);
+    on cars_rent.archive (a_user_id);
 
 alter table cars_rent.archive
     add is_successfully bool default true not null;

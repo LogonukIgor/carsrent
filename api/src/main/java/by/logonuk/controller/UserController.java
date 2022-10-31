@@ -4,6 +4,7 @@ import by.logonuk.controller.requests.user.UserCreateRequest;
 import by.logonuk.controller.requests.user.UserUpdateRequest;
 import by.logonuk.controller.responses.ResponseMapper;
 import by.logonuk.controller.responses.user.UserResponse;
+import by.logonuk.domain.Deal;
 import by.logonuk.domain.User;
 import by.logonuk.exception.NoSuchEntityException;
 import by.logonuk.repository.UserRepository;
@@ -199,7 +200,12 @@ public class UserController {
         Optional<User> searchUser = repository.findByCredentialsLoginAndTechnicalInfoIsDeleted(login, false);
         User user = searchUser.orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND.formatted("id", login)));
 
+        Deal deal = user.getDeal();
+        if(deal!=null){
+            throw new NoSuchEntityException("User has an open case, so deletion is not possible");
+        }
         user.getTechnicalInfo().setIsDeleted(true);
+
 
         repository.save(user);
 

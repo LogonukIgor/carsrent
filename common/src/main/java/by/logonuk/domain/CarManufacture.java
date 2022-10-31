@@ -27,6 +27,10 @@ import javax.persistence.Table;
 @Table(name = "cars_manufacturer")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable
+/*
+    Entity for forming a car in BD,
+    as well as searching for a suitable car on UI
+ */
 public class CarManufacture {
 
     @Id

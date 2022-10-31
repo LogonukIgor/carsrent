@@ -109,10 +109,7 @@ public class CarController {
     }
 
     @GetMapping("/function")
-    @Operation(summary = "Get number of cars in stock", parameters = {
-            @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", description = "Token",
-                    schema = @Schema(defaultValue = "token", type = "string"))
-    })
+    @Operation(summary = "Get number of cars in stock")
     public ResponseEntity<Object> getNumberOfCarsInStock() {
         return new ResponseEntity<>(Collections.singletonMap(RESULT, repository.carsInStock()), HttpStatus.OK);
     }
