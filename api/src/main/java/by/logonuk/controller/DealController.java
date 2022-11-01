@@ -189,7 +189,7 @@ public class DealController {
                                     mediaType = "application/json",
                                     array = @ArraySchema(schema = @Schema(implementation = DealResponse.class))))
             })
-    public ResponseEntity<Object> softDeleteDeal(@RequestBody ArchiveRequest archiveRequest, @ApiIgnore Principal principal) {
+    public ResponseEntity<Object> archiveAndDeleteDeal(@RequestBody ArchiveRequest archiveRequest, @ApiIgnore Principal principal) {
         Long userId = Long.parseLong(archiveRequest.getUserId());
         Optional<User> searchUser = userRepository.findByIdAndTechnicalInfoIsDeleted(userId, false);
 
